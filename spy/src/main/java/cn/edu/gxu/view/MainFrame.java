@@ -1,5 +1,7 @@
 package cn.edu.gxu.view;
 
+import cn.edu.gxu.constant.enums;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,9 +17,11 @@ import java.awt.event.ActionListener;
 public class MainFrame extends JFrame implements ActionListener {
     private JTabbedPane mainTab = new JTabbedPane();
 
-    private Menu menu1, adMenu, menu3, menu4;
-    private MenuItem ad1, ad2, ad3, ad4, ad5, ad6; // 菜单项
-    private Panel contentPanel; // 内容面板，其上用于添加其他待切换的面板
+    private JMenu menu1, adMenu, menu3, orderMenu, menu4;
+    private JMenuItem ad1, ad2, ad3, ad4, ad5, ad6; // 广告
+    private JMenuItem spy1, spy2, spy3, spy4, spy5, spy6; // 间谍
+    private Panel contentPanel = new Panel();
+    ; // 内容面板，其上用于添加其他待切换的面板
 
     public MainFrame(String title) {
         super(title);
@@ -40,49 +44,90 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     private void addMenu() {
-        MenuItem item1, item2;
-        MenuBar menubar = new MenuBar();
-        menu1 = new Menu("文件");
+        JMenuItem item1, item2;
+        JMenuBar menubar = new JMenuBar();
+        menubar.setBackground(Color.WHITE);
+        menu1 = new JMenu("文件");
         menu1.setActionCommand("F");
+        menu1.setFont(new Font("微软雅黑", Font.PLAIN, 14));
 
-        item1 = new MenuItem("加载");
+        item1 = new JMenuItem("加载");
         menu1.add(item1);
-        item2 = new MenuItem("初始化");
+        item2 = new JMenuItem("初始化");
         menu1.add(item2);
 //        menu1.setMnemonic('F');
-        adMenu = new Menu("广告");
+        adMenu = new JMenu("广告");
+        adMenu.setFont(new Font("微软雅黑", Font.PLAIN, 14));
         // 菜单项广告事件监听器
         adMenu.addActionListener(this);
         {
-            ad1 = new MenuItem("第一年");
+            ad1 = new JMenuItem("第一年");
             ad1.addActionListener(this);
-            ad2 = new MenuItem("第二年");
+            ad2 = new JMenuItem("第二年");
             ad2.addActionListener(this);
-
+            ad3 = new JMenuItem("第三年");
+            ad3.addActionListener(this);
+            ad4 = new JMenuItem("第四年");
+            ad4.addActionListener(this);
+            ad5 = new JMenuItem("第五年");
+            ad5.addActionListener(this);
+            ad6 = new JMenuItem("第六年");
+            ad6.addActionListener(this);
             adMenu.add(ad1);
             adMenu.add(ad2);
+            adMenu.add(ad3);
+            adMenu.add(ad4);
+            adMenu.add(ad5);
+            adMenu.add(ad6);
         }
-//        menu1.setActionCommand("E");
-//        menu2.setMnemonic('F');
-        menu3 = new Menu("年末间谍");
+        //        menu1.setActionCommand("E");
+        menu3 = new JMenu("年末间谍");
+        menu3.setFont(new Font("微软雅黑", Font.PLAIN, 14));
+        {
+            spy1 = new JMenuItem("第一年");
+            spy1.addActionListener(this);
+            menu3.add(spy1);
+            spy2 = new JMenuItem("第二年");
+            spy2.addActionListener(this);
+            menu3.add(spy2);
+            spy3 = new JMenuItem("第三年");
+            spy3.addActionListener(this);
+            menu3.add(spy3);
+            spy4 = new JMenuItem("第四年");
+            spy4.addActionListener(this);
+            menu3.add(spy4);
+            spy5 = new JMenuItem("第五年");
+            spy5.addActionListener(this);
+            menu3.add(spy5);
+            spy6 = new JMenuItem("第六年");
+            spy6.addActionListener(this);
+            menu3.add(spy6);
+        }
+
 //        menu1.setActionCommand("V");
 
 //        menu3.setMnemonic('V');
+        orderMenu = new JMenu("订单分析");
+        orderMenu.setFont(new Font("微软雅黑", Font.PLAIN, 14));
 
-        menu4 = new Menu("帮助");
+        menu4 = new JMenu("帮助");
+        menu4.setFont(new Font("微软雅黑", Font.PLAIN, 14));
 //        menu4.setMnemonic('O');
         menubar.add(menu1);
         menubar.add(adMenu);
         menubar.add(menu3);
+        menubar.add(orderMenu);
         menubar.add(menu4);
-        this.setMenuBar(menubar);
+        this.setJMenuBar(menubar);
 
+        this.getContentPane().setLayout(null);
+        contentPanel.setBounds(0, 64, 1000, 700);
+//        Drawpanel.setBounds(0, 0, 722, 361);
+//        contentPanel.add(Drawpanel);
+        contentPanel.setVisible(true);
+        contentPanel.setLayout(null);
+        getContentPane().add(contentPanel);
 
-        contentPanel = new Panel();
-        // 设置布局为边界布局管理器。将contentPanel添加到窗口中心位置。
-        setLayout(new BorderLayout());
-        contentPanel.add(new Label("欢迎使用ERP工具箱"));    // 欢迎页消息
-        add(contentPanel, BorderLayout.CENTER);
 
     }
 
@@ -91,12 +136,13 @@ public class MainFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == ad1) {
-            System.out.println("第一年");
-            showSpecifiedPanel(contentPanel, new AdvertPanel(1));
-        } else if (source == ad2) {
-            System.out.println("第二年");
-            showSpecifiedPanel(contentPanel, new AdvertPanel(2));
+            System.out.println("第一年广告");
+            showSpecifiedPanel(contentPanel, new AdvertPanel());
+        } else if (source == spy1) {
+            System.out.println("第一年间谍");
+            showSpecifiedPanel(contentPanel, new SpyPanel());
         }
+
     }
 
 

@@ -175,4 +175,17 @@ public class Certificate {
         return this;
     }
 
+    public String show() {
+        String result = "";
+        if (enums.CertificateStatus.YEAR_1.status.equals(domesticMarket.status)) {
+            result += "国内,";
+        }
+        if (enums.CertificateStatus.YEAR_1.status.equals(asiaMarket.status)) {
+            result += "亚洲,";
+        }
+        if (enums.CertificateStatus.YEAR_1.status.equals(globalMarket.status)) {
+            result += "国际";
+        }
+        return result;
+    }
 }

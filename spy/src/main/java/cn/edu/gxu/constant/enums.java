@@ -50,6 +50,31 @@ public class enums {
         }
     }
 
+    public enums.CertificateStatus LocalMarket;
+    //区域
+    public enums.CertificateStatus regionalMarket;
+    //国内
+    public enums.CertificateStatus domesticMarket;
+    //亚洲
+    public enums.CertificateStatus asiaMarket;
+    //国际
+    public enums.CertificateStatus globalMarket;
+
+
+    public enum Market {
+        LOCAL_MARKET("本地市场"),
+        REGIONAL_MARKET("区域市场"),
+        DOMESTIC_MARKET("国内市场"),
+        ASIA_MARKET("亚洲市场"),
+        GLOBAL_MARKET("国际市场");
+        public String marketName;
+
+        Market(String marketName) {
+            this.marketName = marketName;
+        }
+
+    }
+
     public enum LineStatus {
         BUILD(1, "在建"),
         DISCONTINUED(2, "停产"),
@@ -117,4 +142,16 @@ public class enums {
             return null;
         }
     }
+
+    public enum SpyType {
+        SCORE(1),//年度经营结果
+        RESULT(2);//每个对手间谍
+
+        public int type;
+
+        SpyType(int type) {
+            this.type = type;
+        }
+    }
+
 }

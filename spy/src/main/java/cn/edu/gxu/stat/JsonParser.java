@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,8 +41,8 @@ public class JsonParser extends Parser {
         spy.setGroupName(content.getString("groupName"));
         int cash = content.getInteger("cash") + NumberUtils.toInt(String.valueOf(content.get("receivable")));
         spy.setCash(cash);
-        spy.setLongtermLoan(NumberUtils.toInt(String.valueOf(content.get("longtermLoan"))));
-        spy.setShorttemLoan(NumberUtils.toInt(String.valueOf(content.get("shorttemLoan"))));
+        spy.setLongtermLoan(((BigDecimal) content.get("longtermLoan")).intValue());
+        spy.setShorttemLoan(((BigDecimal) content.get("shorttemLoan")).intValue());
         spy.formatFactory(content.getString("factory"));
         spy.formatProduct(content.getString("product"));
 
@@ -53,7 +54,7 @@ public class JsonParser extends Parser {
     @Override
     public List<GroupScores> parseScore(String text) {
         JSONObject data = getDate(text);
-        JSONArray datas = data.getJSONArray("busInfos");
+        JSONArray datas = data.getJSONArray("groups");
         return datas.parallelStream().map(g -> JSONObject.toJavaObject((JSON) g, GroupScores.class)).collect(Collectors.toList());
     }
 

@@ -39,8 +39,8 @@ public class SpyDao {
     public Integer groupRunYear;
     public ProdLine prodLine;
     public String groupName;
-    public Integer shorttemLoan;
-    public Integer longtermLoan;
+    public int shorttemLoan;
+    public int longtermLoan;
     public String material;
     public Product product;
     public Certificate certificate;
@@ -72,19 +72,19 @@ public class SpyDao {
         this.groupName = groupName;
     }
 
-    public Integer getShorttemLoan() {
+    public int getShorttemLoan() {
         return shorttemLoan;
     }
 
-    public void setShorttemLoan(Integer shorttemLoan) {
+    public void setShorttemLoan(int shorttemLoan) {
         this.shorttemLoan = shorttemLoan;
     }
 
-    public Integer getLongtermLoan() {
+    public int getLongtermLoan() {
         return longtermLoan;
     }
 
-    public void setLongtermLoan(Integer longtermLoan) {
+    public void setLongtermLoan(int longtermLoan) {
         this.longtermLoan = longtermLoan;
     }
 
@@ -273,13 +273,33 @@ public class SpyDao {
         public void setP5Num(int p5Num) {
             this.p5Num = p5Num;
         }
+
+        public String show() {
+            String result = "";
+            if (p1Num > 0) {
+                result += p1Num + " " + enums.Product.P1.product + ",";
+            }
+            if (p2Num > 0) {
+                result += p2Num + " " + enums.Product.P2.product + ",";
+            }
+            if (p3Num > 0) {
+                result += p3Num + " " + enums.Product.P3.product + ",";
+            }
+            if (p4Num > 0) {
+                result += p4Num + " " + enums.Product.P4.product + ",";
+            }
+            if (p5Num > 0) {
+                result += p5Num + " " + enums.Product.P5.product + ",";
+            }
+            return result;
+        }
     }
 
     public class ProdLine {
         public Map<String, Integer> detail;
         public int sgx;
-        public int rx;
         public int qzd;
+        public int rx;
 
         public Map<String, Integer> getDetail() {
             return detail;
@@ -316,6 +336,20 @@ public class SpyDao {
         @Override
         public String toString() {
             return JSONObject.toJSONString(this);
+        }
+
+        public Object show() {
+            String result = "";
+            if (sgx > 0) {
+                result += sgx + "手工,";
+            }
+            if (qzd > 0) {
+                result += qzd + "全自动,";
+            }
+            if (rx > 0) {
+                result += rx + "柔,";
+            }
+            return result;
         }
     }
 
