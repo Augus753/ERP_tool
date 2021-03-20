@@ -187,8 +187,6 @@ public class SpyDao {
 
             String key = enums.ProdLine.getByLine(productLineName).name + "_" + enums.LineStatus.getByStatus(status).remark + "_" + productName;
             int num = detail.getOrDefault(key, 0);
-            System.out.println(key+"---formatProductLine:" + Arrays.toString(a));
-
             detail.put(key, ++num);
         }
         this.prodLine.setDetail(detail);
@@ -374,26 +372,26 @@ public class SpyDao {
                 data.put(key, n + entry.getValue());
             }
             for (Map.Entry<String, Integer> entry : data.entrySet()) {
-                builder.append(entry.getValue()).append(" x ");
-                builder.append(entry.getKey());
+                builder.append(entry.getValue()).append(" ");
+                builder.append(entry.getKey()).append("，");
             }
             return builder.toString();
         }
 
         public String showOnLine() {
             if (detail == null || detail.isEmpty()) return "";
-
-            System.out.println("detail:" + detail);
             StringBuilder builder = new StringBuilder();
             Map<String, Integer> data = new HashMap<>();
             for (Map.Entry<String, Integer> entry : detail.entrySet()) {
-                String key = entry.getKey().substring(entry.getKey().length() - 3);
-                int n = data.getOrDefault(key, 0);
-                data.put(key, n + entry.getValue());
+                if (enums.LineStatus.ONLINE.remark.equals(entry.getKey().split("_")[1])) {
+                    String key = entry.getKey().substring(entry.getKey().length() - 2);
+                    int n = data.getOrDefault(key, 0);
+                    data.put(key, n + entry.getValue());
+                }
             }
             for (Map.Entry<String, Integer> entry : data.entrySet()) {
                 builder.append(entry.getValue()).append(" x ");
-                builder.append(entry.getKey()).append("，  ");
+                builder.append(entry.getKey()).append("， ");
             }
             return builder.toString();
         }
