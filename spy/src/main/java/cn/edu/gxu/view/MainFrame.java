@@ -1,7 +1,5 @@
 package cn.edu.gxu.view;
 
-import cn.edu.gxu.constant.enums;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,6 +18,7 @@ public class MainFrame extends JFrame implements ActionListener {
     private JMenu menu1, adMenu, menu3, orderMenu, menu4;
     private JMenuItem ad1, ad2, ad3, ad4, ad5, ad6; // 广告
     private JMenuItem spy1, spy2, spy3, spy4, spy5, spy6; // 间谍
+    private JMenuItem order1, order2, order3, order4, order5, order6; // 间谍
     private Panel contentPanel = new Panel();
     ; // 内容面板，其上用于添加其他待切换的面板
 
@@ -105,10 +104,29 @@ public class MainFrame extends JFrame implements ActionListener {
         }
 
 //        menu1.setActionCommand("V");
-
 //        menu3.setMnemonic('V');
         orderMenu = new JMenu("订单分析");
         orderMenu.setFont(new Font("微软雅黑", Font.PLAIN, 14));
+        {
+            order1 = new JMenuItem("第一年");
+            order1.addActionListener(this);
+            orderMenu.add(order1);
+            order2 = new JMenuItem("第二年");
+            order2.addActionListener(this);
+            orderMenu.add(order2);
+            order3 = new JMenuItem("第三年");
+            order3.addActionListener(this);
+            orderMenu.add(order3);
+            order4 = new JMenuItem("第四年");
+            order4.addActionListener(this);
+            orderMenu.add(order4);
+            order5 = new JMenuItem("第五年");
+            order5.addActionListener(this);
+            orderMenu.add(order5);
+            order6 = new JMenuItem("第六年");
+            order6.addActionListener(this);
+            orderMenu.add(order6);
+        }
 
         menu4 = new JMenu("帮助");
         menu4.setFont(new Font("微软雅黑", Font.PLAIN, 14));
@@ -122,8 +140,6 @@ public class MainFrame extends JFrame implements ActionListener {
 
         this.getContentPane().setLayout(null);
         contentPanel.setBounds(0, 64, 1000, 700);
-//        Drawpanel.setBounds(0, 0, 722, 361);
-//        contentPanel.add(Drawpanel);
         contentPanel.setVisible(true);
         contentPanel.setLayout(null);
         getContentPane().add(contentPanel);
@@ -140,7 +156,10 @@ public class MainFrame extends JFrame implements ActionListener {
             showSpecifiedPanel(contentPanel, new AdvertPanel());
         } else if (source == spy1) {
             System.out.println("第一年间谍");
-            showSpecifiedPanel(contentPanel, new SpyPanel());
+            showSpecifiedPanel(contentPanel, new SpyPanel("第一年", this));
+        } else if (source == order1) {
+            System.out.println("第一年间谍");
+            showSpecifiedPanel(contentPanel, new OrderListPanel());
         }
 
     }
@@ -154,13 +173,25 @@ public class MainFrame extends JFrame implements ActionListener {
         contentPanel.repaint();
     }
 
-    // 简易地获取所需的面板(使用时需自定义)
-    class MyPanel extends Panel {
-        public MyPanel(String msg) {
-            this.add(new Label(msg));
-        }
-    }
+    /**
+     * 显示对话框
+     */
 
+    public void showDialog() {
+        this.setVisible(false);
+        JDialog dialog = new JDialog(this, true);
+        dialog.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
+        dialog.setSize(300, 180);
+        dialog.setTitle("DialogTest");
+        dialog.add(new JLabel("这个是对话框"));
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true); //显示对话框，窗口阻塞，不往下执行，只有等到对话框关闭了才往下执行。
+        //判断主窗口是否是隐藏的，如果是隐藏的就显示
+        if (!this.isVisible()) {
+            this.setVisible(true);
+        }
+
+    }
 
     public static void main(String[] args) {
         new MainFrame("ERP工具箱").init();

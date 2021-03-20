@@ -9,12 +9,10 @@ package cn.edu.gxu.view;
  */
 
 import cn.edu.gxu.constant.Constant;
-import cn.edu.gxu.constant.enums;
-import cn.edu.gxu.pojo.Advert;
+import cn.edu.gxu.persist.CacheManager;
 import cn.edu.gxu.pojo.GroupScores;
 import cn.edu.gxu.pojo.SpyDao;
 import cn.edu.gxu.stat.JsonParser;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -41,12 +39,15 @@ public class SpyPanel extends JPanel {
     JButton spyButton = new JButton("添加间牒结果");
 
     Font font = new Font("黑体", Font.PLAIN, 15);
+    private JTable table;
+    private static MainFrame mainFrame;
+    private static String year;
 
+    public SpyPanel(String year, MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+        this.year = year;
 
-    public SpyPanel() {
-
-        this.setBounds(100, 0, 900, 700);
-
+        this.setBounds(0, 0, 1000, 560);
         this.setLayout(null);
 
         {//年末经营结果
@@ -143,7 +144,7 @@ public class SpyPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-
+        CacheManager.setByGroupName(CacheManager.generateGroupKey(year, spyDao.getGroupName()), spyDao);
         int i = 0;
         for (; i < data.length; i++) {
             if (spyDao.getGroupName().equals(data[i][0])) {
@@ -158,22 +159,42 @@ public class SpyPanel extends JPanel {
         data[i][7] = spyDao.getCertificate().show();
         data[i][8] = spyDao.getProdLine().show();
         loadTable(data);
+//        CacheManager.getByGroupName()
+
     }
 
     private void loadTable(Object[][] data) {
-        JTable table = new JTable(data, vName);
+        table = new JTable(data, vName);
 
         table.setEnabled(false);
         DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-        r.setHorizontalAlignment(JLabel.RIGHT);
+        r.setHorizontalAlignment(JLabel.CENTER);
         table.setDefaultRenderer(Object.class, r);
         table.setRowHeight(25);// 设置表格行高
         table.getTableHeader().setFont(new Font("Dialog", 0, 14));
         table.setFont(new Font("Menu.font", Font.PLAIN, 14));
 
         JScrollPane jp = new JScrollPane(table);
-        jp.setBounds(0, 120, 900, 700);
+        jp.setBounds(0, 120, 1000, 500);
         // 匿名内部类调用this 需要类名的this
         SpyPanel.this.add(jp);
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int clickCount = e.getClickCount();
+                if (clickCount == 2) {
+                    int rowI = table.rowAtPoint(e.getPoint());// 得到table的行号
+                    int columnI = table.columnAtPoint(e.getPoint());// 得到table的列号
+                    String msg = "单击鼠标 " + rowI + "行" + columnI + "列" + (table.getModel()).getValueAt(rowI, columnI);
+                    System.out.println(msg);
+                    String key = CacheManager.generateGroupKey(year, data[rowI][0] + "");
+                    new SpyDetailDialog(SpyPanel.mainFrame, key).setVisible(true);
+//                    JOptionPane.showMessageDialog(null, msg, "数据", JOptionPane.PLAIN_MESSAGE);
+                }
+            }
+        });
     }
+
+
 }

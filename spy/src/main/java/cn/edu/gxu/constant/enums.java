@@ -24,6 +24,13 @@ public class enums {
         public boolean check(String productName) {
             return product.equals(productName);
         }
+
+        public static Product exchange(String product) {
+            for (Product p : Product.values()) {
+                if (p.product.equals(product)) return p;
+            }
+            return P1;
+        }
     }
 
     public enum Material {
@@ -40,13 +47,23 @@ public class enums {
     }
 
     public enum ProdLine {
-        X1("X1"),//手工线
-        X3("X3"),//全自动
-        X4("X4");//柔线
+        X1("X1", "手工线"),//手工线
+        X3("X3", "全自动"),//全自动
+        X4("X4", "柔线");//柔线
         public String line;
+        public String name;
 
-        ProdLine(String line) {
+        ProdLine(String line, String name) {
             this.line = line;
+            this.name = name;
+        }
+
+        public static ProdLine getByLine(String line) {
+            for (ProdLine prodLine : ProdLine.values()) {
+                if (prodLine.line.equals(line))
+                    return prodLine;
+            }
+            return X3;
         }
     }
 
@@ -62,15 +79,27 @@ public class enums {
 
 
     public enum Market {
-        LOCAL_MARKET("本地市场"),
-        REGIONAL_MARKET("区域市场"),
-        DOMESTIC_MARKET("国内市场"),
-        ASIA_MARKET("亚洲市场"),
-        GLOBAL_MARKET("国际市场");
+        LOCAL_MARKET("S1", "本地"),
+        REGIONAL_MARKET("S2", "区域"),
+        DOMESTIC_MARKET("S3", "国内"),
+        ASIA_MARKET("S4", "亚洲"),
+        GLOBAL_MARKET("S5", "国际");
+
+        public String sSysId;
         public String marketName;
 
-        Market(String marketName) {
+        Market(String sSysId, String marketName) {
+            this.sSysId = sSysId;
             this.marketName = marketName;
+        }
+
+        public static Market exchange(String sSysId) {
+            for (Market m : Market.values()) {
+                if (m.sSysId.equals(sSysId)) {
+                    return m;
+                }
+            }
+            return LOCAL_MARKET;
         }
 
     }
@@ -86,6 +115,15 @@ public class enums {
         LineStatus(Integer status, String remark) {
             this.status = status;
             this.remark = remark;
+        }
+
+        public static LineStatus getByStatus(Integer status) {
+            for (LineStatus lineStatus : LineStatus.values()) {
+                if (lineStatus.status.equals(status)) {
+                    return lineStatus;
+                }
+            }
+            return ONLINE;
         }
     }
 

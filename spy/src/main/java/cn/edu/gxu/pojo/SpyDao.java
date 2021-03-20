@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import static cn.edu.gxu.constant.Constant.MIN_PRODUCT_NUM;
 
 /**
  * @author 第九空间
@@ -182,7 +184,14 @@ public class SpyDao {
             } else if (enums.ProdLine.X4.name().equals(productLineName)) {
                 this.prodLine.rx++;
             }
+
+            String key = enums.ProdLine.getByLine(productLineName).name + "_" + enums.LineStatus.getByStatus(status).remark + "_" + productName;
+            int num = detail.getOrDefault(key, 0);
+            System.out.println(key+"---formatProductLine:" + Arrays.toString(a));
+
+            detail.put(key, ++num);
         }
+        this.prodLine.setDetail(detail);
     }
 
     public class Factory {
@@ -276,23 +285,25 @@ public class SpyDao {
 
         public String show() {
             String result = "";
-            if (p1Num > 0) {
+            if (p1Num >= MIN_PRODUCT_NUM) {
                 result += p1Num + " " + enums.Product.P1.product + ",";
             }
-            if (p2Num > 0) {
+            if (p2Num >= MIN_PRODUCT_NUM) {
                 result += p2Num + " " + enums.Product.P2.product + ",";
             }
-            if (p3Num > 0) {
+            if (p3Num >= MIN_PRODUCT_NUM) {
                 result += p3Num + " " + enums.Product.P3.product + ",";
             }
-            if (p4Num > 0) {
+            if (p4Num >= MIN_PRODUCT_NUM) {
                 result += p4Num + " " + enums.Product.P4.product + ",";
             }
-            if (p5Num > 0) {
+            if (p5Num >= MIN_PRODUCT_NUM) {
                 result += p5Num + " " + enums.Product.P5.product + ",";
             }
             return result;
         }
+
+
     }
 
     public class ProdLine {
@@ -350,6 +361,41 @@ public class SpyDao {
                 result += rx + "柔,";
             }
             return result;
+        }
+
+        public String showDetail() {
+            if (detail == null || detail.isEmpty()) return "";
+            StringBuilder builder = new StringBuilder();
+            Map<String, Integer> data = new HashMap<>();
+            for (Map.Entry<String, Integer> entry : detail.entrySet()) {
+                String key = entry.getKey().substring(0, entry.getKey().length() - 3);
+                System.out.println("-----" + key);
+                int n = data.getOrDefault(key, 0);
+                data.put(key, n + entry.getValue());
+            }
+            for (Map.Entry<String, Integer> entry : data.entrySet()) {
+                builder.append(entry.getValue()).append(" x ");
+                builder.append(entry.getKey());
+            }
+            return builder.toString();
+        }
+
+        public String showOnLine() {
+            if (detail == null || detail.isEmpty()) return "";
+
+            System.out.println("detail:" + detail);
+            StringBuilder builder = new StringBuilder();
+            Map<String, Integer> data = new HashMap<>();
+            for (Map.Entry<String, Integer> entry : detail.entrySet()) {
+                String key = entry.getKey().substring(entry.getKey().length() - 3);
+                int n = data.getOrDefault(key, 0);
+                data.put(key, n + entry.getValue());
+            }
+            for (Map.Entry<String, Integer> entry : data.entrySet()) {
+                builder.append(entry.getValue()).append(" x ");
+                builder.append(entry.getKey()).append("，  ");
+            }
+            return builder.toString();
         }
     }
 

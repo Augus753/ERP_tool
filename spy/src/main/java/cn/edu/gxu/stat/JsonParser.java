@@ -1,13 +1,16 @@
 package cn.edu.gxu.stat;
 
+import cn.edu.gxu.constant.enums;
 import cn.edu.gxu.pojo.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +44,8 @@ public class JsonParser extends Parser {
         spy.setGroupName(content.getString("groupName"));
         int cash = content.getInteger("cash") + NumberUtils.toInt(String.valueOf(content.get("receivable")));
         spy.setCash(cash);
+//        spy.setLongtermLoan(0);
+//        spy.setShorttemLoan(0);
         spy.setLongtermLoan(((BigDecimal) content.get("longtermLoan")).intValue());
         spy.setShorttemLoan(((BigDecimal) content.get("shorttemLoan")).intValue());
         spy.formatFactory(content.getString("factory"));
@@ -59,7 +64,14 @@ public class JsonParser extends Parser {
     }
 
     @Override
-    public List<Order> parseOrder() {
-        return null;
+    public List<Order> parseOrder(String text) {
+        JSONObject data = getDate(text);
+        JSONArray datas = data.getJSONArray("orderResults");
+        return datas.parallelStream().map(o -> JSONObject.toJavaObject((JSON) o, Order.class)).peek(order -> {
+            order.setpSysId(StringUtils.upperCase(order.getpSysId()));
+            order.setOrderResult(order.getOrderResult().split("_")[0]);
+            order.setpPerFee(order.getpPerFee().split("\\.")[0]);
+            order.setsSysId(enums.Market.exchange(order.getsSysId()).marketName);
+        }).collect(Collectors.toList());
     }
 }

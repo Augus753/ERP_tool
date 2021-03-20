@@ -21,6 +21,6 @@ public abstract class Parser {
 
     public abstract List<GroupScores> parseScore(String text);
 
-    public abstract List<Order> parseOrder();
+    public abstract List<Order> parseOrder(String text);
 
 }

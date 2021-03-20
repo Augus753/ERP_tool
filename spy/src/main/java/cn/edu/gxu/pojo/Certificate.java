@@ -181,7 +181,7 @@ public class Certificate {
             result += "国内,";
         }
         if (enums.CertificateStatus.YEAR_1.status.equals(asiaMarket.status)) {
-            result += "亚洲,";
+            result += "亚,";
         }
         if (enums.CertificateStatus.YEAR_1.status.equals(globalMarket.status)) {
             result += "国际";
