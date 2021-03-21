@@ -62,7 +62,7 @@ public class OrderListPanel extends JPanel {
 
     public OrderListPanel() {
 
-        this.setBounds(0, 0, 900, 700);
+        this.setBounds(0, 0, 900, 560);
         this.setLayout(null);
         {//添加订单
             orderTf.setBounds(200, 0, 300, 50);
@@ -536,11 +536,10 @@ public class OrderListPanel extends JPanel {
 
 
         JScrollPane jp = new JScrollPane(table);
-        jp.setBounds(100, 100, 800, 500);
+        jp.setBounds(100, 100, 800, 560);
         if (faceTable != null) {
             this.remove(faceTable);
             if (vName == this.vName) {
-//                drawOptionCmb();
                 optionJp.setVisible(true);
             } else optionJp.setVisible(false);
         }
