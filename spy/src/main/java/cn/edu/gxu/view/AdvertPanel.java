@@ -11,12 +11,10 @@ package cn.edu.gxu.view;
 import cn.edu.gxu.constant.Constant;
 import cn.edu.gxu.constant.enums;
 import cn.edu.gxu.persist.CacheManager;
-import cn.edu.gxu.pojo.Advert;
+import cn.edu.gxu.pojo.AdvertPo;
 import cn.edu.gxu.stat.JsonParser;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -28,7 +26,6 @@ public class AdvertPanel extends JPanel {
     /**
      *
      */
-    private static final long serialVersionUID = 1L;
     private JComboBox cmb = new JComboBox();    //下拉列表
     private Object[][] data = new Object[Constant.MAX_AD_NUM][enums.Market.values().length + 1];
 
@@ -110,7 +107,7 @@ public class AdvertPanel extends JPanel {
             return;
         }
         try {
-            List<Advert> ads = new JsonParser().parseAd(text);
+            List<AdvertPo> ads = new JsonParser().parseAd(text);
             String key = CacheManager.generateMarketKey(year, value);
             CacheManager.setAd(key, ads);
         } catch (Exception e) {
@@ -130,11 +127,11 @@ public class AdvertPanel extends JPanel {
             }
         }
         String key = CacheManager.generateMarketKey(year, market);
-        List<Advert> ads = CacheManager.getAd(key);
+        List<AdvertPo> ads = CacheManager.getAd(key);
         if (ads == null || ads.size() == 0) return;
         int endNum = Math.min(ads.size(), Constant.MAX_AD_NUM);
         for (int j = 0; j < endNum; j++) {
-            Advert ad = ads.get(j);
+            AdvertPo ad = ads.get(j);
             String group = "  (" + ad.getGroupName().substring(1, ad.getGroupName().length() - 1) + " ";
             if (group.length() < 6) group = "  " + group;
             data[j][i] = ad.getPublicity() + group;
@@ -144,19 +141,22 @@ public class AdvertPanel extends JPanel {
     private void loadTable(Object[][] data) {
         if (data == null) return;
 
-        JTable table = new JTable(data, vName);
-        table.setEnabled(false);
+
+        TableModel table = new TableModel(data, vName);
+
+//        JTable table = new JTable(data, vName);
+//        table.setEnabled(false);
 //        DefaultTableColumnModel thr = new DefaultTableColumnModel();
 //        thr.setColumnSelectionAllowed(JLabel.CENTER);
 //        table.getTableHeader().setDefaultRenderer(thr);
 
-        DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-        r.setHorizontalAlignment(JLabel.RIGHT);
-        table.setDefaultRenderer(Object.class, r);
-        table.setRowHeight(25);// 设置表格行高
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.getTableHeader().setFont(new Font("Dialog", 0, 14));
-        table.setFont(new Font("Menu.font", Font.PLAIN, 15));
+//        DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+//        r.setHorizontalAlignment(JLabel.RIGHT);
+//        table.setDefaultRenderer(Object.class, r);
+//        table.setRowHeight(25);// 设置表格行高
+////        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//        table.getTableHeader().setFont(new Font("Dialog", 0, 14));
+//        table.setFont(new Font("Menu.font", Font.PLAIN, 15));
 
         for (int i = 1; i < table.getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setPreferredWidth(130);
@@ -164,7 +164,6 @@ public class AdvertPanel extends JPanel {
 
         JScrollPane jp = new JScrollPane(table);
         jp.setBounds(0, 60, 800, 400);
-        // 匿名内部类调用this 需要类名的this
-        AdvertPanel.this.add(jp);
+        add(jp);
     }
 }

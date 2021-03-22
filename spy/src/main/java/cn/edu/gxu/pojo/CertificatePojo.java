@@ -5,7 +5,6 @@ import cn.edu.gxu.constant.enums;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,7 +14,7 @@ import java.util.Map;
  * @date 2021/3/13 22:45
  * @Description
  */
-public class Certificate {
+public class CertificatePojo {
     //本地
     public enums.CertificateStatus LocalMarket;
     //区域
@@ -134,7 +133,7 @@ public class Certificate {
     }
 
     //"S1_1,S2_1,S3_1,S4_1,S5_2,ZS1_2,ZS2_2,P1_3,P2_1,P3_1,P4_1,P5_1"
-    public Certificate format(String text) {
+    public CertificatePojo format(String text) {
         String[] parts = text.split(",");
         for (String part : parts) {
             String[] a = part.split("_");

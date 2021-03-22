@@ -1,6 +1,6 @@
 package cn.edu.gxu.view;
 
-import cn.edu.gxu.pojo.SpyDao;
+import cn.edu.gxu.pojo.SpyPo;
 import com.alibaba.fastjson.JSONObject;
 
 import javax.swing.*;
@@ -16,8 +16,8 @@ import java.awt.*;
 public class SpyDetailDialog extends JDialog {
     Font font = new Font("黑体", Font.PLAIN, 15);
 
-    public SpyDetailDialog(JFrame frame, SpyDao spyDao, JSONObject content) {
-        super(frame, spyDao.getGroupName() + " 详情_排名：" + content.get("rank"));
+    public SpyDetailDialog(JFrame frame, SpyPo spyPo, JSONObject content) {
+        super(frame, spyPo.getGroupName() + " 详情_排名：" + content.get("rank"));
 
 
         Container conn = getContentPane();
@@ -28,42 +28,42 @@ public class SpyDetailDialog extends JDialog {
         l1.setFont(font);
         conn.add(l1);
 
-        JLabel l2 = new JLabel("资金：" + spyDao.getCash());
+        JLabel l2 = new JLabel("资金：" + spyPo.getCash());
         l2.setBounds(230, 20, 100, 30);
         conn.add(l2);
         l2.setFont(font);
 
-        JLabel l3 = new JLabel("长贷：" + spyDao.getLongtermLoan());
+        JLabel l3 = new JLabel("长贷：" + spyPo.getLongtermLoan());
         l3.setBounds(30, 70, 100, 30);
         conn.add(l3);
         l3.setFont(font);
 
-        JLabel l4 = new JLabel("短贷：" + spyDao.getShorttemLoan());
+        JLabel l4 = new JLabel("短贷：" + spyPo.getShorttemLoan());
         l4.setBounds(230, 70, 100, 30);
         conn.add(l4);
         l4.setFont(font);
 
-        JLabel l5 = new JLabel("市场：" + spyDao.getCertificate().showMarket());
+        JLabel l5 = new JLabel("市场：" + spyPo.getCertificate().showMarket());
         l5.setBounds(30, 120, 300, 30);
         conn.add(l5);
         l5.setFont(font);
 
-        JLabel l51 = new JLabel("产品研发：" + spyDao.getCertificate().showProduct());
+        JLabel l51 = new JLabel("产品研发：" + spyPo.getCertificate().showProduct());
         l51.setBounds(30, 170, 470, 30);
         conn.add(l51);
         l51.setFont(font);
 
-        JLabel l6 = new JLabel("库存：" + spyDao.getProduct().show().replace(",", "，  "));
+        JLabel l6 = new JLabel("库存：" + spyPo.getProduct().show().replace(",", "，  "));
         l6.setBounds(30, 220, 300, 30);
         conn.add(l6);
         l6.setFont(font);
 
-        JLabel l7 = new JLabel("生产线：" + spyDao.getProdLine().showDetail());
+        JLabel l7 = new JLabel("生产线：" + spyPo.getProdLine().showDetail());
         l7.setBounds(30, 270, 300, 30);
         conn.add(l7);
         l7.setFont(font);
 
-        JLabel l8 = new JLabel("在产产品：" + spyDao.getProdLine().showOnLine());
+        JLabel l8 = new JLabel("在产产品：" + spyPo.getProdLine().showOnLine());
         l8.setBounds(30, 320, 300, 30);
         conn.add(l8);
         l8.setFont(font);

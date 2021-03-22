@@ -10,14 +10,13 @@ package cn.edu.gxu.view;
 
 import cn.edu.gxu.constant.Constant;
 import cn.edu.gxu.persist.CacheManager;
-import cn.edu.gxu.pojo.GroupScores;
-import cn.edu.gxu.pojo.SpyDao;
+import cn.edu.gxu.pojo.GroupScoresPo;
+import cn.edu.gxu.pojo.SpyPo;
 import cn.edu.gxu.stat.JsonParser;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -41,7 +40,7 @@ public class SpyPanel extends JPanel {
     JButton spyButton = new JButton("添加间牒结果");
 
     Font font = new Font("黑体", Font.PLAIN, 15);
-    private JTable table;
+//    private JTable table;
     private static MainFrame mainFrame;
     private static String year;
 
@@ -100,7 +99,7 @@ public class SpyPanel extends JPanel {
     }
 
     private void showScoreData(String text) {
-        List<GroupScores> scores;
+        List<GroupScoresPo> scores;
         try {
             scores = new JsonParser().parseScore(text);
         } catch (Exception e) {
@@ -117,20 +116,20 @@ public class SpyPanel extends JPanel {
     }
 
     private void reloadData() {
-        List<GroupScores> scores = CacheManager.getScore(year);
+        List<GroupScoresPo> scores = CacheManager.getScore(year);
         if (scores == null || scores.size() == 0) return;
 
         loadScore(scores);
-        for (GroupScores groupScores : scores)
-            loadSpy(groupScores.getGroupName());
+        for (GroupScoresPo groupScoresPo : scores)
+            loadSpy(groupScoresPo.getGroupName());
 
         //加载表格
         loadTable(data);
     }
 
-    private void loadScore(List<GroupScores> scores) {
+    private void loadScore(List<GroupScoresPo> scores) {
         for (int i = 0; i < scores.size(); i++) {
-            GroupScores score = scores.get(i);
+            GroupScoresPo score = scores.get(i);
             data[i][0] = score.getGroupName();
             data[i][1] = score.getGroupProfit();
             data[i][2] = score.getGroupRights();
@@ -147,47 +146,48 @@ public class SpyPanel extends JPanel {
         }
         //文本框输入
         System.out.println("间谍输入框：" + text);
-        SpyDao spyDao;
+        SpyPo spyPo;
         try {
-            spyDao = new JsonParser().parseSpy(text);
+            spyPo = new JsonParser().parseSpy(text);
         } catch (Exception e) {
             System.out.println(e);
             JOptionPane.showMessageDialog(null, "请重新输入间谍结果数据", "输入错误",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        CacheManager.setSpy(CacheManager.generateGroupKey(year, spyDao.getGroupName()), spyDao);
-        loadSpy(spyDao.getGroupName());
+        CacheManager.setSpy(CacheManager.generateGroupKey(year, spyPo.getGroupName()), spyPo);
+        loadSpy(spyPo.getGroupName());
         loadTable(data);
     }
 
     private void loadSpy(String groupName) {
-        SpyDao spyDao = CacheManager.getSpy(CacheManager.generateGroupKey(year, groupName));
-        if (spyDao == null) return;
+        SpyPo spyPo = CacheManager.getSpy(CacheManager.generateGroupKey(year, groupName));
+        if (spyPo == null) return;
         int i = 0;
         for (; i < data.length; i++) {
-            if (spyDao.getGroupName().equals(data[i][0])) {
+            if (spyPo.getGroupName().equals(data[i][0])) {
                 break;
             }
         }
-        data[i][4] = spyDao.getCash();
-        int loan = spyDao.getLongtermLoan() + spyDao.getShorttemLoan();
+        data[i][4] = spyPo.getCash();
+        int loan = spyPo.getLongtermLoan() + spyPo.getShorttemLoan();
         data[i][5] = loan;
-        data[i][6] = spyDao.getProduct().show();
-        data[i][7] = spyDao.getCertificate().showMarket();
-        data[i][8] = spyDao.getProdLine().show();
+        data[i][6] = spyPo.getProduct().show();
+        data[i][7] = spyPo.getCertificate().showMarket();
+        data[i][8] = spyPo.getProdLine().show();
     }
 
     private void loadTable(Object[][] data) {
-        table = new JTable(data, vName);
 
-        table.setEnabled(false);
-        DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-        r.setHorizontalAlignment(JLabel.CENTER);
-        table.setDefaultRenderer(Object.class, r);
-        table.setRowHeight(25);// 设置表格行高
-        table.getTableHeader().setFont(new Font("Dialog", 0, 14));
-        table.setFont(new Font("Menu.font", Font.PLAIN, 14));
+        TableModel table = new TableModel(data, vName);
+
+//        table.setEnabled(false);
+//        DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+//        r.setHorizontalAlignment(JLabel.CENTER);
+//        table.setDefaultRenderer(Object.class, r);
+//        table.setRowHeight(25);// 设置表格行高
+//        table.getTableHeader().setFont(new Font("Dialog", 0, 14));
+//        table.setFont(new Font("Menu.font", Font.PLAIN, 14));
 
         JScrollPane jp = new JScrollPane(table);
         jp.setBounds(0, 120, 1100, 510);
@@ -202,14 +202,14 @@ public class SpyPanel extends JPanel {
                     String msg = "单击鼠标 " + rowI + "行" + columnI + "列" + (table.getModel()).getValueAt(rowI, columnI);
                     System.out.println(msg);
                     String key = CacheManager.generateGroupKey(year, data[rowI][0] + "");
-                    SpyDao spyDao = CacheManager.getSpy(key);
-                    if (spyDao != null) {
+                    SpyPo spyPo = CacheManager.getSpy(key);
+                    if (spyPo != null) {
                         int groupRights = NumberUtils.toInt(data[rowI][2] + "");
                         int rank = NumberUtils.toInt(data[rowI][9] + "");
                         JSONObject content = new JSONObject();
                         content.put("groupRights", groupRights);
                         content.put("rank", rank);
-                        new SpyDetailDialog(SpyPanel.mainFrame, spyDao, content).setVisible(true);
+                        new SpyDetailDialog(SpyPanel.mainFrame, spyPo, content).setVisible(true);
                     }
 //                    JOptionPane.showMessageDialog(null, msg, "数据", JOptionPane.PLAIN_MESSAGE);
                 }

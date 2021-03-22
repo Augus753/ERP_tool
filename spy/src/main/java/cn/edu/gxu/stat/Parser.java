@@ -1,9 +1,9 @@
 package cn.edu.gxu.stat;
 
-import cn.edu.gxu.pojo.Advert;
-import cn.edu.gxu.pojo.GroupScores;
-import cn.edu.gxu.pojo.Order;
-import cn.edu.gxu.pojo.SpyDao;
+import cn.edu.gxu.pojo.AdvertPo;
+import cn.edu.gxu.pojo.GroupScoresPo;
+import cn.edu.gxu.pojo.OrderPo;
+import cn.edu.gxu.pojo.SpyPo;
 
 import java.util.List;
 
@@ -15,12 +15,12 @@ import java.util.List;
  * @Description
  */
 public abstract class Parser {
-    public abstract List<Advert> parseAd(String text);
+    public abstract List<AdvertPo> parseAd(String text);
 
-    public abstract SpyDao parseSpy(String text);
+    public abstract SpyPo parseSpy(String text);
 
-    public abstract List<GroupScores> parseScore(String text);
+    public abstract List<GroupScoresPo> parseScore(String text);
 
-    public abstract List<Order> parseOrder(String text);
+    public abstract List<OrderPo> parseOrder(String text);
 
 }

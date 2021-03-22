@@ -11,9 +11,9 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class ErpConfig {
     //    短贷利率
-    private float shortTemLoanRate;
+    private float shortTemLoanRate = (float) 0.05;
     //    长利率
-    private float longTemLoanRate;
+    private float longTemLoanRate = (float) 0.1;
     //    P1成本
     private int P1Cost;
     //    P2成本
@@ -26,6 +26,22 @@ public class ErpConfig {
     private int P5Cost;
     //组名，用,分割
     private String groupNames;
+    //    贷款倍数
+    private int loanTimes = 2;
+    //生产时间
+    public int sgxProductTimes = 100;
+    public int qzdProductTimes = 60;
+    public int rxProductTimes = 48;
+    //折旧
+    public int sgxDepreciation = 15;
+    public int qzdDepreciation = 22;
+    public int rxDepreciation = 30;
+    //维修费
+    public int sgxUpKeep = 5;
+    public int qzdUpKeep = 15;
+    public int rxUpKeep = 20;
+    //管理费
+    public int administration = 60;
 
     public float getShortTemLoanRate() {
         return shortTemLoanRate;
@@ -91,6 +107,93 @@ public class ErpConfig {
         this.groupNames = groupNames;
     }
 
+    public int getLoanTimes() {
+        return loanTimes;
+    }
+
+    public void setLoanTimes(int loanTimes) {
+        this.loanTimes = loanTimes;
+    }
+
+    public int getSgxProductTimes() {
+        return sgxProductTimes;
+    }
+
+    public void setSgxProductTimes(int sgxProductTimes) {
+        this.sgxProductTimes = sgxProductTimes;
+    }
+
+    public int getQzdProductTimes() {
+        return qzdProductTimes;
+    }
+
+    public void setQzdProductTimes(int qzdProductTimes) {
+        this.qzdProductTimes = qzdProductTimes;
+    }
+
+    public int getRxProductTimes() {
+        return rxProductTimes;
+    }
+
+    public void setRxProductTimes(int rxProductTimes) {
+        this.rxProductTimes = rxProductTimes;
+    }
+
+    public int getSgxDepreciation() {
+        return sgxDepreciation;
+    }
+
+    public void setSgxDepreciation(int sgxDepreciation) {
+        this.sgxDepreciation = sgxDepreciation;
+    }
+
+    public int getQzdDepreciation() {
+        return qzdDepreciation;
+    }
+
+    public void setQzdDepreciation(int qzdDepreciation) {
+        this.qzdDepreciation = qzdDepreciation;
+    }
+
+    public int getRxDepreciation() {
+        return rxDepreciation;
+    }
+
+    public void setRxDepreciation(int rxDepreciation) {
+        this.rxDepreciation = rxDepreciation;
+    }
+
+    public int getSgxUpKeep() {
+        return sgxUpKeep;
+    }
+
+    public void setSgxUpKeep(int sgxUpKeep) {
+        this.sgxUpKeep = sgxUpKeep;
+    }
+
+    public int getQzdUpKeep() {
+        return qzdUpKeep;
+    }
+
+    public void setQzdUpKeep(int qzdUpKeep) {
+        this.qzdUpKeep = qzdUpKeep;
+    }
+
+    public int getRxUpKeep() {
+        return rxUpKeep;
+    }
+
+    public void setRxUpKeep(int rxUpKeep) {
+        this.rxUpKeep = rxUpKeep;
+    }
+
+    public int getAdministration() {
+        return administration;
+    }
+
+    public void setAdministration(int administration) {
+        this.administration = administration;
+    }
 
     @Override
     public String toString() {

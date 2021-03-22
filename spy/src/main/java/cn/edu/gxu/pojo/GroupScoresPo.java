@@ -19,7 +19,7 @@ import com.alibaba.fastjson.JSONObject;
  * rightsTop	int		权益排名
  * isMyGroup	int		是否是自己	1：是，0：否
  */
-public class GroupScores {
+public class GroupScoresPo {
     public Integer groupId;
     public String groupName;
     public Integer groupRights;

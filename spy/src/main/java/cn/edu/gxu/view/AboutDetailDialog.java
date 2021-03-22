@@ -1,8 +1,5 @@
 package cn.edu.gxu.view;
 
-import cn.edu.gxu.persist.CacheManager;
-import cn.edu.gxu.pojo.SpyDao;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;

@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSONObject;
  * @date 2021/3/13 21:58
  * @Description
  */
-public class Order {
+public class OrderPo {
     private String sSysId;//市场	S1：本地，S2区域
     private String pOrderNum;//订单编号
     private String orderResult;//组

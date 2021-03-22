@@ -27,12 +27,14 @@ import java.util.TimerTask;
  */
 public class MainFrame extends JFrame implements ActionListener {
 
-    private JMenu fileMenu, adMenu, spyMenu, orderMenu, helpMenu;
+    private JMenu fileMenu, adMenu, spyMenu, orderMenu, forecastMenu, helpMenu;
 
-    JMenuItem openFileItem, item2, clearItem;
+    JMenuItem openFileItem, item2, clearItem, configMenuItem;
+    ;
     private Map<String, JMenuItem> adMenuItem = new HashMap<>();
     private Map<String, JMenuItem> orderMenuItem = new HashMap<>();
     private Map<String, JMenuItem> spyMenuItem = new HashMap<>();
+    private Map<String, JMenuItem> forecastMenuItem = new HashMap<>();
 
     private Panel contentPanel = new Panel();
     // 内容面板，其上用于添加其他待切换的面板
@@ -105,6 +107,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 }
             });
             fileMenu.add(item2);
+
             clearItem = new JMenuItem("初始化");
             clearItem.setFont(menuFont);
             clearItem.addActionListener(e -> {
@@ -113,10 +116,24 @@ public class MainFrame extends JFrame implements ActionListener {
                         JOptionPane.YES_NO_OPTION);
                 if (opt == JOptionPane.YES_OPTION) {
                     //确认继续操作
-                    CacheManager.clear();
+                    try {
+                        CacheManager.clear();
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "初始化失败", "文件错误",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             });
             fileMenu.add(clearItem);
+
+            configMenuItem = new JMenuItem("参数配置");
+            configMenuItem.setFont(menuFont);
+            configMenuItem.addActionListener(this);
+//            configMenuItem.addActionListener(e -> {
+//                CacheManager.clear();
+//            });
+            fileMenu.add(configMenuItem);
         }
 
 //        menu1.setMnemonic('F');
@@ -156,9 +173,21 @@ public class MainFrame extends JFrame implements ActionListener {
             }
         }
 
+        forecastMenu = new JMenu("经营预测");
+        forecastMenu.setFont(menuFont);
+        {
+            for (int i = 1; i < MainConfig.RUN_YEAR.length; i++) {
+                String year = MainConfig.RUN_YEAR[i];
+                JMenuItem forecastItem = new JMenuItem(year);
+                forecastItem.addActionListener(this);
+                forecastItem.setFont(menuFont);
+                forecastMenu.add(forecastItem);
+                forecastMenuItem.put(year, forecastItem);
+            }
+        }
+
         helpMenu = new JMenu("关于");
         helpMenu.setFont(menuFont);
-//        helpMenu.addActionListener(this);
         helpMenu.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 new AboutDetailDialog(MainFrame.this).setVisible(true);
@@ -170,6 +199,7 @@ public class MainFrame extends JFrame implements ActionListener {
         menubar.add(adMenu);
         menubar.add(orderMenu);
         menubar.add(spyMenu);
+        menubar.add(forecastMenu);
         menubar.add(helpMenu);
         this.setJMenuBar(menubar);
 
@@ -178,10 +208,10 @@ public class MainFrame extends JFrame implements ActionListener {
         contentPanel.setVisible(false);
         contentPanel.setLayout(null);
         getContentPane().add(contentPanel);
-
-        BlackPicPanel mainPanel = new BlackPicPanel("background.jpg");
-        mainPanel.setBounds(0, 0, 1200, 700);
-        add(mainPanel);
+        contentPanel.add(new ConfigPanel());
+//        BlackPicPanel mainPanel = new BlackPicPanel("background.jpg");
+//        mainPanel.setBounds(0, 0, 1200, 700);
+//        add(mainPanel);
     }
 
     @Override
@@ -208,6 +238,18 @@ public class MainFrame extends JFrame implements ActionListener {
                 showSpecifiedPanel(contentPanel, new SpyPanel(entry.getKey(), this));
                 return;
             }
+        }
+
+        for (Map.Entry<String, JMenuItem> entry : forecastMenuItem.entrySet()) {
+            if (source == entry.getValue()) {
+                System.out.println(entry.getKey() + " 经营预测");
+                showSpecifiedPanel(contentPanel, new ForecastPanel(entry.getKey()));
+                return;
+            }
+        }
+        if (source == configMenuItem) {
+            System.out.println(" 参数配置");
+            showSpecifiedPanel(contentPanel, new ConfigPanel());
         }
     }
 

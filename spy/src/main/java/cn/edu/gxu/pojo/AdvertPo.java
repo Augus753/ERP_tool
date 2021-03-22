@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
  * groupId			组ID
  * publicity			投资额
  */
-public class Advert {
+public class AdvertPo {
     public String groupName;
     public String knownTop;
     public Integer isMyGroup;

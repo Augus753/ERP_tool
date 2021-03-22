@@ -12,7 +12,7 @@ import cn.edu.gxu.config.MainConfig;
 import cn.edu.gxu.constant.Constant;
 import cn.edu.gxu.constant.enums;
 import cn.edu.gxu.persist.CacheManager;
-import cn.edu.gxu.pojo.Order;
+import cn.edu.gxu.pojo.OrderPo;
 import cn.edu.gxu.pojo.ProfitDao;
 import cn.edu.gxu.stat.JsonParser;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +21,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -461,7 +460,7 @@ public class OrderListPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-
+        //这代码看的好难受
         Map<String, ProfitDao> profitDaos = new HashMap<>();
         for (Object[] row : data) {
             ProfitDao p = profitDaos.getOrDefault(row[2], new ProfitDao());
@@ -497,49 +496,51 @@ public class OrderListPanel extends JPanel {
         //文本框输入
         System.out.println("输入框：" + text);
 
-        List<Order> orders;
+        List<OrderPo> orderPos;
         try {
-            orders = new JsonParser().parseOrder(text);
+            orderPos = new JsonParser().parseOrder(text);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "输入的订单数据错误", "输入错误",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        CacheManager.setOrder(year, orders);
+        CacheManager.setOrder(year, orderPos);
         loadOrderList();
         loadTable(data, vName);
     }
 
     private void loadOrderList() {
-        List<Order> orders = CacheManager.getOrder(year);
-        if (orders == null || orders.size() == 0) return;
+        List<OrderPo> orderPos = CacheManager.getOrder(year);
+        if (orderPos == null || orderPos.size() == 0) return;
 
         //        "市场", "单号", "组号", "产品", "数量", "单价", "应交货期", "账期"
-        data = new Object[orders.size()][vName.length];
-        for (int j = 0; j < orders.size(); j++) {
-            Order order = orders.get(j);
-            data[j][0] = order.getsSysId();
-            data[j][1] = order.getpOrderNum();
-            data[j][2] = order.getOrderResult();
-            data[j][3] = order.getpSysId();
-            data[j][4] = order.getMyOrderCount();
-            data[j][5] = order.getpPerFee();
-            data[j][6] = String.format("%s月%s日", order.getpDeliveryMonth(), order.getpDeliveryDay());
-            data[j][7] = order.getpPaymentTerm();
+        data = new Object[orderPos.size()][vName.length];
+        for (int j = 0; j < orderPos.size(); j++) {
+            OrderPo orderPo = orderPos.get(j);
+            data[j][0] = orderPo.getsSysId();
+            data[j][1] = orderPo.getpOrderNum();
+            data[j][2] = orderPo.getOrderResult();
+            data[j][3] = orderPo.getpSysId();
+            data[j][4] = orderPo.getMyOrderCount();
+            data[j][5] = orderPo.getpPerFee();
+            data[j][6] = String.format("%s月%s日", orderPo.getpDeliveryMonth(), orderPo.getpDeliveryDay());
+            data[j][7] = orderPo.getpPaymentTerm();
         }
     }
 
     private void loadTable(Object[][] data, String[] vName) {
         if (data == null) return;
-        JTable table = new JTable(data, vName);
-        table.setEnabled(false);
-        DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-        r.setHorizontalAlignment(JLabel.CENTER);
-        table.setDefaultRenderer(Object.class, r);
-        table.setRowHeight(25);// 设置表格行高
-        table.getTableHeader().setFont(new Font("Dialog", 0, 14));
-        table.setFont(new Font("Menu.font", Font.PLAIN, 13));
+//        JTable table = new JTable(data, vName);
+//        table.setEnabled(false);
+//        DefaultTableCellRenderer r = new DefaultTableCellRenderer();
+//        r.setHorizontalAlignment(JLabel.CENTER);
+//        table.setDefaultRenderer(Object.class, r);
+//        table.setRowHeight(25);// 设置表格行高
+//        table.getTableHeader().setFont(new Font("Dialog", 0, 14));
+//        table.setFont(new Font("Menu.font", Font.PLAIN, 13));
 
+
+        TableModel table = new TableModel(data, vName);
 
         JScrollPane jp = new JScrollPane(table);
         jp.setBounds(100, 100, 800, 610);

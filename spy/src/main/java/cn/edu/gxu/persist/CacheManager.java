@@ -1,18 +1,15 @@
 package cn.edu.gxu.persist;
 
-import cn.edu.gxu.config.MainConfig;
-import cn.edu.gxu.pojo.Advert;
-import cn.edu.gxu.pojo.GroupScores;
-import cn.edu.gxu.pojo.Order;
-import cn.edu.gxu.pojo.SpyDao;
+import cn.edu.gxu.pojo.AdvertPo;
+import cn.edu.gxu.pojo.GroupScoresPo;
+import cn.edu.gxu.pojo.OrderPo;
+import cn.edu.gxu.pojo.SpyPo;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * @author atom.hu
@@ -48,28 +45,17 @@ public class CacheManager {
 
     public static void flush() throws Exception {
         String cacheText = JSONObject.toJSONString(cache);
-        System.out.println("保存：" + cache);
+        System.out.println("保存配置");
         FileUtils.write(new File(DATA_PATH), cacheText, DEFAULT_CHARSET);
     }
 
-    public static synchronized void clear() {
+    public static synchronized void clear() throws Exception {
         cache.getScoreCache().clear();
         cache.getAdCache().clear();
         cache.getSpyCache().clear();
         cache.getOrderCache().clear();
+        flush();
     }
-
-
-    public static void flush(File file) {
-        String cacheText = JSONObject.toJSONString(cache);
-        try {
-            System.out.println("保存：" + cache);
-            FileUtils.write(file, cacheText, DEFAULT_CHARSET);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public static synchronized void reload() {
         try {
@@ -87,19 +73,11 @@ public class CacheManager {
         System.out.println("读取到：" + cache);
     }
 
-//    public MainConfig config;
-//    public static MainConfig getSpy(String groupName) {
-//        return cache.getConfig().get(groupName);
-//    }
-//    public static void setSpy(String key,String value) {
-//        cache.getConfig().put(groupName, spy);
-//    }
-
-    public static SpyDao getSpy(String groupName) {
+    public static SpyPo getSpy(String groupName) {
         return cache.getSpyCache().get(groupName);
     }
 
-    public static void setSpy(String groupName, SpyDao spy) {
+    public static void setSpy(String groupName, SpyPo spy) {
         cache.getSpyCache().put(groupName, spy);
     }
 
@@ -107,11 +85,11 @@ public class CacheManager {
         return year + "_" + groupName;
     }
 
-    public static List<Advert> getAd(String key) {
+    public static List<AdvertPo> getAd(String key) {
         return cache.getAdCache().get(key);
     }
 
-    public static void setAd(String market, List<Advert> ad) {
+    public static void setAd(String market, List<AdvertPo> ad) {
         cache.getAdCache().put(market, ad);
     }
 
@@ -119,20 +97,25 @@ public class CacheManager {
         return year + "_" + market;
     }
 
-    public static List<Order> getOrder(String key) {
+    public static List<OrderPo> getOrder(String key) {
         return cache.getOrderCache().get(key);
     }
 
-    public static List<GroupScores> getScore(String year) {
+    public static List<GroupScoresPo> getScore(String year) {
+        System.out.println("获取分数：" + year);
         return cache.getScoreCache().get(year);
     }
 
-    public static void setScore(String year, List<GroupScores> score) {
+    public static void setScore(String year, List<GroupScoresPo> score) {
+        System.out.println("增加分数：" + year);
         cache.getScoreCache().put(year, score);
     }
 
-    public static void setOrder(String year, List<Order> orders) {
-        cache.getOrderCache().put(year, orders);
+    public static void setOrder(String year, List<OrderPo> orderPos) {
+        cache.getOrderCache().put(year, orderPos);
     }
 
+    public static ErpConfig getConfig() {
+        return cache.getConfig();
+    }
 }

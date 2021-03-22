@@ -10,7 +10,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -29,18 +28,18 @@ public class JsonParser extends Parser {
     }
 
     @Override
-    public List<Advert> parseAd(String text) {
+    public List<AdvertPo> parseAd(String text) {
         JSONObject data = getDate(text);
         JSONArray datas = data.getJSONArray("groups");
-        return datas.parallelStream().map(g -> JSONObject.toJavaObject((JSON) g, Advert.class)).collect(Collectors.toList());
+        return datas.parallelStream().map(g -> JSONObject.toJavaObject((JSON) g, AdvertPo.class)).collect(Collectors.toList());
     }
 
     @Override
-    public SpyDao parseSpy(String text) {
+    public SpyPo parseSpy(String text) {
         JSONObject data = getDate(text);
         JSONArray datas = data.getJSONArray("busInfos");
         JSONObject content = (JSONObject) datas.get(0);
-        SpyDao spy = new SpyDao();
+        SpyPo spy = new SpyPo();
         spy.setGroupName(content.getString("groupName"));
         int cash = content.getInteger("cash") + NumberUtils.toInt(String.valueOf(content.get("receivable")));
         spy.setCash(cash);
@@ -51,23 +50,23 @@ public class JsonParser extends Parser {
         spy.formatFactory(content.getString("factory"));
         spy.formatProduct(content.getString("product"));
 
-        spy.setCertificate(new Certificate().format(content.getString("certificate")));
+        spy.setCertificate(new CertificatePojo().format(content.getString("certificate")));
         spy.formatProductLine(content.getString("prodLine"));
         return spy;
     }
 
     @Override
-    public List<GroupScores> parseScore(String text) {
+    public List<GroupScoresPo> parseScore(String text) {
         JSONObject data = getDate(text);
         JSONArray datas = data.getJSONArray("groups");
-        return datas.parallelStream().map(g -> JSONObject.toJavaObject((JSON) g, GroupScores.class)).collect(Collectors.toList());
+        return datas.parallelStream().map(g -> JSONObject.toJavaObject((JSON) g, GroupScoresPo.class)).collect(Collectors.toList());
     }
 
     @Override
-    public List<Order> parseOrder(String text) {
+    public List<OrderPo> parseOrder(String text) {
         JSONObject data = getDate(text);
         JSONArray datas = data.getJSONArray("orderResults");
-        return datas.parallelStream().map(o -> JSONObject.toJavaObject((JSON) o, Order.class)).peek(order -> {
+        return datas.parallelStream().map(o -> JSONObject.toJavaObject((JSON) o, OrderPo.class)).peek(order -> {
             order.setpSysId(StringUtils.upperCase(order.getpSysId()));
             order.setOrderResult(order.getOrderResult().split("_")[0]);
             order.setpPerFee(order.getpPerFee().split("\\.")[0]);

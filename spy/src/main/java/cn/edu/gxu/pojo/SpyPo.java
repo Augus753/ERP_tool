@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +36,7 @@ import static cn.edu.gxu.constant.Constant.MIN_PRODUCT_NUM;
  * worker
  * factory		厂房	"CF1_3,CF2_3,CF3_3,CF4_1"，3租用，1未拥有
  */
-public class SpyDao {
+public class SpyPo {
     public Integer groupRunYear;
     public ProdLine prodLine;
     public String groupName;
@@ -45,7 +44,7 @@ public class SpyDao {
     public int longtermLoan;
     public String material;
     public Product product;
-    public Certificate certificate;
+    public CertificatePojo certificatePojo;
     public Integer cash;
     public Factory factory;
 
@@ -115,12 +114,12 @@ public class SpyDao {
         this.cash = cash;
     }
 
-    public Certificate getCertificate() {
-        return certificate;
+    public CertificatePojo getCertificate() {
+        return certificatePojo;
     }
 
-    public void setCertificate(Certificate certificate) {
-        this.certificate = certificate;
+    public void setCertificate(CertificatePojo certificatePojo) {
+        this.certificatePojo = certificatePojo;
     }
 
     public Factory getFactory() {

@@ -1,9 +1,9 @@
 package cn.edu.gxu.persist;
 
-import cn.edu.gxu.pojo.Advert;
-import cn.edu.gxu.pojo.GroupScores;
-import cn.edu.gxu.pojo.Order;
-import cn.edu.gxu.pojo.SpyDao;
+import cn.edu.gxu.pojo.AdvertPo;
+import cn.edu.gxu.pojo.GroupScoresPo;
+import cn.edu.gxu.pojo.OrderPo;
+import cn.edu.gxu.pojo.SpyPo;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.HashMap;
@@ -19,15 +19,15 @@ import java.util.Map;
  */
 public class CacheMoodle {
     //    间谍
-    private ErpConfig config;
+    private ErpConfig config = new ErpConfig();
     //    间谍
-    private Map<String, SpyDao> spyCache = new HashMap<>();
+    private Map<String, SpyPo> spyCache = new HashMap<>();
     //    广告
-    private Map<String, List<Advert>> adCache = new HashMap<>();
+    private Map<String, List<AdvertPo>> adCache = new HashMap<>();
     //    评分
-    private Map<String, List<GroupScores>> scoreCache = new HashMap<>();
+    private Map<String, List<GroupScoresPo>> scoreCache = new HashMap<>();
     //    订单
-    private Map<String, List<Order>> orderCache = new HashMap<>();
+    private Map<String, List<OrderPo>> orderCache = new HashMap<>();
 
     public ErpConfig getConfig() {
         return config;
@@ -37,35 +37,35 @@ public class CacheMoodle {
         this.config = config;
     }
 
-    public Map<String, SpyDao> getSpyCache() {
+    public Map<String, SpyPo> getSpyCache() {
         return spyCache;
     }
 
-    public void setSpyCache(Map<String, SpyDao> spyCache) {
+    public void setSpyCache(Map<String, SpyPo> spyCache) {
         this.spyCache = spyCache;
     }
 
-    public Map<String, List<Advert>> getAdCache() {
+    public Map<String, List<AdvertPo>> getAdCache() {
         return adCache;
     }
 
-    public void setAdCache(Map<String, List<Advert>> adCache) {
+    public void setAdCache(Map<String, List<AdvertPo>> adCache) {
         this.adCache = adCache;
     }
 
-    public Map<String, List<GroupScores>> getScoreCache() {
+    public Map<String, List<GroupScoresPo>> getScoreCache() {
         return scoreCache;
     }
 
-    public void setScoreCache(Map<String, List<GroupScores>> scoreCache) {
+    public void setScoreCache(Map<String, List<GroupScoresPo>> scoreCache) {
         this.scoreCache = scoreCache;
     }
 
-    public Map<String, List<Order>> getOrderCache() {
+    public Map<String, List<OrderPo>> getOrderCache() {
         return orderCache;
     }
 
-    public void setOrderCache(Map<String, List<Order>> orderCache) {
+    public void setOrderCache(Map<String, List<OrderPo>> orderCache) {
         this.orderCache = orderCache;
     }
 

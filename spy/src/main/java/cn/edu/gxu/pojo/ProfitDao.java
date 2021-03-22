@@ -13,6 +13,7 @@ public class ProfitDao {
     private String groupName;
     private String marketName;
     private String productName;
+    private int num;
     private int sales;
     private int profit;
 
@@ -34,6 +35,14 @@ public class ProfitDao {
 
     public int getProfit() {
         return profit;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
     }
 
     public void setProfit(int profit) {
