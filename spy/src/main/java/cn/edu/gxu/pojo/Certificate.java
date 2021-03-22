@@ -1,7 +1,12 @@
 package cn.edu.gxu.pojo;
 
+import cn.edu.gxu.config.MainConfig;
 import cn.edu.gxu.constant.enums;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.math.NumberUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author atom.hu
@@ -30,6 +35,7 @@ public class Certificate {
     public enums.CertificateStatus p3;
     public enums.CertificateStatus p4;
     public enums.CertificateStatus p5;
+
 
     public enums.CertificateStatus getLocalMarket() {
         return LocalMarket;
@@ -175,7 +181,7 @@ public class Certificate {
         return this;
     }
 
-    public String show() {
+    public String showMarket() {
         String result = "";
         if (enums.CertificateStatus.YEAR_1.status.equals(domesticMarket.status)) {
             result += "国内,";
@@ -187,5 +193,41 @@ public class Certificate {
             result += "国际";
         }
         return result;
+    }
+
+    public String showProduct() {
+        if (MainConfig.CERT_MAP.size() == 0) {
+            MainConfig.CERT_MAP.put(enums.Product.P1, p1);
+            MainConfig.CERT_MAP.put(enums.Product.P2, p2);
+            MainConfig.CERT_MAP.put(enums.Product.P3, p3);
+            MainConfig.CERT_MAP.put(enums.Product.P4, p4);
+            MainConfig.CERT_MAP.put(enums.Product.P5, p5);
+        }
+
+        StringBuilder builder = new StringBuilder();
+        StringBuilder seg = new StringBuilder();
+        for (enums.CertificateStatus cert : enums.CertificateStatus.values()) {
+            if (cert == enums.CertificateStatus.YEAR_3) {
+                continue;
+            }
+            for (Map.Entry<enums.Product, enums.CertificateStatus> entry : MainConfig.CERT_MAP.entrySet()) {
+                if (entry.getValue() == cert) {
+                    seg.append(entry.getKey().product).append(",");
+                }
+            }
+            if (seg.length() > 0) {
+                seg.delete(seg.length() - 1, seg.length());
+                builder.append(cert.remark).append("：").append(seg).append("，  ");
+                seg.delete(0, seg.length());
+            }
+        }
+        System.out.println(builder.toString());
+        return builder.toString();
+    }
+
+
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this);
     }
 }

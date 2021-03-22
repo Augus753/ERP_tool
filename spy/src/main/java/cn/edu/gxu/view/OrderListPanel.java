@@ -11,6 +11,7 @@ package cn.edu.gxu.view;
 import cn.edu.gxu.config.MainConfig;
 import cn.edu.gxu.constant.Constant;
 import cn.edu.gxu.constant.enums;
+import cn.edu.gxu.persist.CacheManager;
 import cn.edu.gxu.pojo.Order;
 import cn.edu.gxu.pojo.ProfitDao;
 import cn.edu.gxu.stat.JsonParser;
@@ -59,10 +60,11 @@ public class OrderListPanel extends JPanel {
     private String defaultProductCmd = "所有产品";
     private String defaultGroupCmd = "所有组";
     private String defaultMonthCmd = "所有月";
+    private static String year;
 
-    public OrderListPanel() {
-
-        this.setBounds(0, 0, 900, 560);
+    public OrderListPanel(String year) {
+        OrderListPanel.year = year;
+        this.setBounds(0, 0, 900, 610);
         this.setLayout(null);
         {//添加订单
             orderTf.setBounds(200, 0, 300, 50);
@@ -113,7 +115,7 @@ public class OrderListPanel extends JPanel {
         }
         {
             //市场订单数量占比
-            productNumButton.setBounds(0, 320, 100, 80);
+            productNumButton.setBounds(0, 340, 100, 80);
             productNumButton.setFont(font);
             // 给按钮加上监听
             productNumButton.addActionListener(e -> {
@@ -153,11 +155,6 @@ public class OrderListPanel extends JPanel {
     private void filterOrderNumTable(String product) {
         Object[][] filterDatas = Arrays.stream(data)
                 .filter(objects -> defaultProductCmd.equals(product) || product.equals(objects[3])
-//                            if (defaultProductCmd.equals(product)) {
-//                                return true;
-//                            }
-//                            return product.equals(objects[3]);
-//                        }
                 ).toArray(Object[][]::new);
         enums.Product[] aa;
         if (defaultProductCmd.equals(product)) {
@@ -491,7 +488,8 @@ public class OrderListPanel extends JPanel {
     }
 
     private void reloadData() {
-
+        loadOrderList();
+        loadTable(data, vName);
     }
 
     private void addOrder(String text) {
@@ -507,8 +505,16 @@ public class OrderListPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
+        CacheManager.setOrder(year, orders);
+        loadOrderList();
+        loadTable(data, vName);
+    }
 
-//        "市场", "单号", "组号", "产品", "数量", "单价", "应交货期", "账期"
+    private void loadOrderList() {
+        List<Order> orders = CacheManager.getOrder(year);
+        if (orders == null || orders.size() == 0) return;
+
+        //        "市场", "单号", "组号", "产品", "数量", "单价", "应交货期", "账期"
         data = new Object[orders.size()][vName.length];
         for (int j = 0; j < orders.size(); j++) {
             Order order = orders.get(j);
@@ -521,10 +527,10 @@ public class OrderListPanel extends JPanel {
             data[j][6] = String.format("%s月%s日", order.getpDeliveryMonth(), order.getpDeliveryDay());
             data[j][7] = order.getpPaymentTerm();
         }
-        loadTable(data, vName);
     }
 
     private void loadTable(Object[][] data, String[] vName) {
+        if (data == null) return;
         JTable table = new JTable(data, vName);
         table.setEnabled(false);
         DefaultTableCellRenderer r = new DefaultTableCellRenderer();
@@ -536,7 +542,7 @@ public class OrderListPanel extends JPanel {
 
 
         JScrollPane jp = new JScrollPane(table);
-        jp.setBounds(100, 100, 800, 560);
+        jp.setBounds(100, 100, 800, 610);
         if (faceTable != null) {
             this.remove(faceTable);
             if (vName == this.vName) {
@@ -548,6 +554,5 @@ public class OrderListPanel extends JPanel {
         // 匿名内部类调用this 需要类名的this
         OrderListPanel.this.add(jp, jp);
         faceTable = jp;
-//        this.add(""+jp);
     }
 }

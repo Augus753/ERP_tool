@@ -13,6 +13,8 @@ import cn.edu.gxu.persist.CacheManager;
 import cn.edu.gxu.pojo.GroupScores;
 import cn.edu.gxu.pojo.SpyDao;
 import cn.edu.gxu.stat.JsonParser;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -44,10 +46,10 @@ public class SpyPanel extends JPanel {
     private static String year;
 
     public SpyPanel(String year, MainFrame mainFrame) {
-        this.mainFrame = mainFrame;
-        this.year = year;
+        SpyPanel.mainFrame = mainFrame;
+        SpyPanel.year = year;
 
-        this.setBounds(0, 0, 1000, 560);
+        this.setBounds(0, 0, 1200, 610);
         this.setLayout(null);
 
         {//年末经营结果
@@ -88,9 +90,7 @@ public class SpyPanel extends JPanel {
             });
         }
 
-
         reloadData();
-
 
         this.add(scoreTf);
         this.add(spyTf);
@@ -109,7 +109,26 @@ public class SpyPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
+        CacheManager.setScore(year, scores);
+
         System.out.println("输入框：" + text);
+        loadScore(scores);
+        loadTable(data);
+    }
+
+    private void reloadData() {
+        List<GroupScores> scores = CacheManager.getScore(year);
+        if (scores == null || scores.size() == 0) return;
+
+        loadScore(scores);
+        for (GroupScores groupScores : scores)
+            loadSpy(groupScores.getGroupName());
+
+        //加载表格
+        loadTable(data);
+    }
+
+    private void loadScore(List<GroupScores> scores) {
         for (int i = 0; i < scores.size(); i++) {
             GroupScores score = scores.get(i);
             data[i][0] = score.getGroupName();
@@ -118,13 +137,6 @@ public class SpyPanel extends JPanel {
             data[i][3] = String.format("%.2f", (score.getGroupScore() / (float) score.getGroupRights()));
             data[i][vName.length - 1] = i;
         }
-        //加载文件
-        loadTable(data);
-    }
-
-    private void reloadData() {
-        //加载文件
-        loadTable(data);
     }
 
     private void showSpyData(String text) {
@@ -144,7 +156,14 @@ public class SpyPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        CacheManager.setByGroupName(CacheManager.generateGroupKey(year, spyDao.getGroupName()), spyDao);
+        CacheManager.setSpy(CacheManager.generateGroupKey(year, spyDao.getGroupName()), spyDao);
+        loadSpy(spyDao.getGroupName());
+        loadTable(data);
+    }
+
+    private void loadSpy(String groupName) {
+        SpyDao spyDao = CacheManager.getSpy(CacheManager.generateGroupKey(year, groupName));
+        if (spyDao == null) return;
         int i = 0;
         for (; i < data.length; i++) {
             if (spyDao.getGroupName().equals(data[i][0])) {
@@ -153,14 +172,10 @@ public class SpyPanel extends JPanel {
         }
         data[i][4] = spyDao.getCash();
         int loan = spyDao.getLongtermLoan() + spyDao.getShorttemLoan();
-        System.out.println(spyDao.getLongtermLoan() + "---" + spyDao.getShorttemLoan() + "---loan:" + loan);
         data[i][5] = loan;
         data[i][6] = spyDao.getProduct().show();
-        data[i][7] = spyDao.getCertificate().show();
+        data[i][7] = spyDao.getCertificate().showMarket();
         data[i][8] = spyDao.getProdLine().show();
-        loadTable(data);
-//        CacheManager.getByGroupName()
-
     }
 
     private void loadTable(Object[][] data) {
@@ -175,21 +190,27 @@ public class SpyPanel extends JPanel {
         table.setFont(new Font("Menu.font", Font.PLAIN, 14));
 
         JScrollPane jp = new JScrollPane(table);
-        jp.setBounds(0, 120, 1000, 500);
-        // 匿名内部类调用this 需要类名的this
-        SpyPanel.this.add(jp);
-
+        jp.setBounds(0, 120, 1100, 510);
+        add(jp);
+//        table.setSelectionBackground(new Color(0));
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int clickCount = e.getClickCount();
-                if (clickCount == 2) {
+                if (e.getClickCount() == 2) {
                     int rowI = table.rowAtPoint(e.getPoint());// 得到table的行号
                     int columnI = table.columnAtPoint(e.getPoint());// 得到table的列号
                     String msg = "单击鼠标 " + rowI + "行" + columnI + "列" + (table.getModel()).getValueAt(rowI, columnI);
                     System.out.println(msg);
                     String key = CacheManager.generateGroupKey(year, data[rowI][0] + "");
-                    new SpyDetailDialog(SpyPanel.mainFrame, key).setVisible(true);
+                    SpyDao spyDao = CacheManager.getSpy(key);
+                    if (spyDao != null) {
+                        int groupRights = NumberUtils.toInt(data[rowI][2] + "");
+                        int rank = NumberUtils.toInt(data[rowI][9] + "");
+                        JSONObject content = new JSONObject();
+                        content.put("groupRights", groupRights);
+                        content.put("rank", rank);
+                        new SpyDetailDialog(SpyPanel.mainFrame, spyDao, content).setVisible(true);
+                    }
 //                    JOptionPane.showMessageDialog(null, msg, "数据", JOptionPane.PLAIN_MESSAGE);
                 }
             }

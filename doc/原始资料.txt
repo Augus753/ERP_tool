@@ -51,7 +51,7 @@ P1未开发
 
 
 14组
-{"hasbuy":1,"code":0,"msg":"","busInfos":[{"groupRunYear":2,"prodLine":"X3_2_P4,X3_2_P4,X3_2_P4,X4_4_P5","groupName":"第14组","payable":0.0,"shorttemLoan":0.0,"receivable":1263.0,"groupRunMonth":12,"longtermLoan":400.0,"groupRunDay":30,"buyInfoMonth":12,"material":"R1_0,R2_0,R3_0,R4_0","buyInfoDay":30,"product":"P3_0,P4_0,P5_1","groupId":"2117","certificate":"S1_1,S2_1,S3_1,S4_1,S5_2,ZS1_1,ZS2_1,P1_3,P2_3,P3_1,P4_1,P5_1","buyInfoYear":2,"cash":-1146.25,"worker":"GR1_50,GR2_50,GR3_30","factory":"CF1_2,CF2_1,CF3_1,CF4_1"}]}
+{"hasbuy":1,"code":0,"msg":"","busInfos":[{"groupRunYear":2,"prodLine":"X3_2_P4,X3_2_P4,X3_2_P4,X4_4_P5","groupName":"第14组","payable":0.0,"shorttemLoan":0.0,"receivable":1263.0,"groupRunMonth":12,"longtermLoan":400.0,"groupRunDay":30,"buyInfoMonth":12,"material":"R1_0,R2_0,R3_0,R4_0","buyInfoDay":30,"product":"P3_0,P4_0,P5_1","groupId":"2117","certificate":"S1_1,S2_1,S3_1,S4_1,S5_2,ZS1_1,ZS2_1,P1_2,P2_3,P3_2,P4_2,P5_1","buyInfoYear":2,"cash":-1146.25,"worker":"GR1_50,GR2_50,GR3_30","factory":"CF1_2,CF2_1,CF3_1,CF4_1"}]}
 现金余额：-1146.25
 长期贷款：400短期贷款：0
 应收款：1263应付款：0

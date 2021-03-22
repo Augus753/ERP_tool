@@ -15,7 +15,6 @@ import cn.edu.gxu.pojo.Advert;
 import cn.edu.gxu.stat.JsonParser;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -23,7 +22,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Objects;
 
-public class AdvertPanel extends JPanel {
+public class ConfigPanel extends JPanel {
 
     /**
      *
@@ -39,54 +38,68 @@ public class AdvertPanel extends JPanel {
             enums.Market.ASIA_MARKET.marketName,
             enums.Market.GLOBAL_MARKET.marketName};
 
-    JTextField tf = new JTextField("请输入广告json报文");
+    JTextField tf1 = new JTextField();
+    JTextField tf2 = new JTextField();
+    JTextField tf3 = new JTextField();
+    JTextField tf4 = new JTextField();
+    JTextField tf5 = new JTextField();
 
-    JButton button = new JButton("添加");
+    JButton button = new JButton("修改");
 
     Font font = new Font("黑体", Font.PLAIN, 15);
     private static String year;
 
-    public AdvertPanel(String year) {
-        AdvertPanel.year = year;
+    public ConfigPanel(String year) {
+        ConfigPanel.year = year;
         this.setBounds(100, 0, 900, 460);
-
         this.setLayout(null);
 
         button.setBounds(540, 10, 100, 30);
-
         button.setFont(font);
 
-        tf.setBounds(100, 0, 250, 50);
+//        CacheManager.getAd();
+        JLabel l1 = new JLabel("P1 成本：");
+        l1.setFont(font);
+        l1.setBounds(100, 50, 50, 30);
+        add(l1);
+        tf1.setBounds(200, 50, 100, 30);
 
-        // 给文本框加上鼠标单击事件监听
-        tf.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // TODO Auto-generated method stub
-                tf.setText("");
-            }
-        });
+        JLabel l2 = new JLabel("P2 成本：");
+        l2.setFont(font);
+        l2.setBounds(100, 90, 50, 30);
+        add(l2);
+        tf2.setBounds(200, 90, 100, 30);
 
-        cmb.addItem("--请选择--");    //向下拉列表中添加一项
-        cmb.addItem(enums.Market.LOCAL_MARKET.marketName);
-        cmb.addItem(enums.Market.REGIONAL_MARKET.marketName);
-        cmb.addItem(enums.Market.DOMESTIC_MARKET.marketName);
-        cmb.addItem(enums.Market.ASIA_MARKET.marketName);
-        cmb.addItem(enums.Market.GLOBAL_MARKET.marketName);
-        cmb.setBounds(400, 10, 100, 30);
+        JLabel l3 = new JLabel("P3 成本：");
+        l3.setFont(font);
+        l3.setBounds(100, 130, 50, 30);
+        add(l3);
+        tf3.setBounds(200, 130, 100, 30);
 
-        for (int i = 0; i < data.length; i++) {
-            data[i][0] = i + 1;
-        }
+
+        JLabel l4 = new JLabel("P4 成本：");
+        l4.setFont(font);
+        l4.setBounds(100, 170, 50, 30);
+        add(l4);
+        tf4.setBounds(200, 170, 100, 30);
+
+
+        JLabel l5 = new JLabel("P5 成本：");
+        l5.setFont(font);
+        l5.setBounds(100, 210, 50, 30);
+        add(l5);
+        tf5.setBounds(200, 210, 100, 30);
+
+
         showAllData();
         // 给按钮加上监听
         button.addActionListener(e -> {
-            String s = tf.getText().trim();
+            String s = tf1.getText().trim();
             showData(s);
         });
 
         this.add(cmb);
-        this.add(tf);
+        this.add(tf1);
         this.add(button);
         this.setVisible(true);
     }
@@ -145,11 +158,8 @@ public class AdvertPanel extends JPanel {
         if (data == null) return;
 
         JTable table = new JTable(data, vName);
-        table.setEnabled(false);
-//        DefaultTableColumnModel thr = new DefaultTableColumnModel();
-//        thr.setColumnSelectionAllowed(JLabel.CENTER);
-//        table.getTableHeader().setDefaultRenderer(thr);
 
+        table.setEnabled(false);
         DefaultTableCellRenderer r = new DefaultTableCellRenderer();
         r.setHorizontalAlignment(JLabel.RIGHT);
         table.setDefaultRenderer(Object.class, r);
@@ -165,6 +175,6 @@ public class AdvertPanel extends JPanel {
         JScrollPane jp = new JScrollPane(table);
         jp.setBounds(0, 60, 800, 400);
         // 匿名内部类调用this 需要类名的this
-        AdvertPanel.this.add(jp);
+        ConfigPanel.this.add(jp);
     }
 }

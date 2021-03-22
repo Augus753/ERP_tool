@@ -1,5 +1,10 @@
 package cn.edu.gxu.config;
 
+import cn.edu.gxu.constant.enums;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author atom.hu
  * @version V1.0
@@ -45,4 +50,17 @@ public class MainConfig {
             "9，10",
             "11，12"
     };
+
+    public static final String[] RUN_YEAR = new String[]{
+            "第一年",
+            "第二年",
+            "第三年",
+            "第四年",
+            "第五年",
+            "第六年",
+    };
+
+    //最好用注解反射
+    public static Map<enums.Product, enums.CertificateStatus> CERT_MAP = new HashMap();
+
 }

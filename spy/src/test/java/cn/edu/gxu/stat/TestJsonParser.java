@@ -23,11 +23,11 @@ public class TestJsonParser {
         new JsonParser().parseScore(text).stream().forEach(System.out::println);
     }
 
-    @Test
-    public void test_parseSpy() {
-        String text = "{\"hasbuy\":0,\"code\":0,\"msg\":\"\",\"busInfos\":[{\"groupRunYear\":2,\"prodLine\":\"X4_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1\",\"groupName\":\"第19组\",\"payable\":0,\"shorttemLoan\":100,\"receivable\":100,\"groupRunMonth\":12,\"longtermLoan\":2140,\"groupRunDay\":30,\"buyInfoMonth\":-1,\"material\":\"R1_0,R3_0,R4_0\",\"buyInfoDay\":-1,\"product\":\"P1_0,P3_3\",\"groupId\":\"298\",\"certificate\":\"S1_1,S2_1,S3_3,S4_3,S5_3,ZS1_3,ZS2_3,P1_1,P2_1,P3_1,P4_2,P5_2\",\"buyInfoYear\":-1,\"cash\":-155.35,\"worker\":\"GR1_50,GR2_50,GR3_30\",\"factory\":\"CF1_3,CF2_3,CF3_3,CF4_3\"}]}";
-        System.out.println(new JsonParser().parseSpy(text));
-    }
+//    @Test
+//    public void test_parseSpy() {
+//        String text = "{\"hasbuy\":0,\"code\":0,\"msg\":\"\",\"busInfos\":[{\"groupRunYear\":2,\"prodLine\":\"X4_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1\",\"groupName\":\"第19组\",\"payable\":0,\"shorttemLoan\":100,\"receivable\":100,\"groupRunMonth\":12,\"longtermLoan\":2140,\"groupRunDay\":30,\"buyInfoMonth\":-1,\"material\":\"R1_0,R3_0,R4_0\",\"buyInfoDay\":-1,\"product\":\"P1_0,P3_3\",\"groupId\":\"298\",\"certificate\":\"S1_1,S2_1,S3_3,S4_3,S5_3,ZS1_3,ZS2_3,P1_1,P2_1,P3_1,P4_2,P5_2\",\"buyInfoYear\":-1,\"cash\":-155.35,\"worker\":\"GR1_50,GR2_50,GR3_30\",\"factory\":\"CF1_3,CF2_3,CF3_3,CF4_3\"}]}";
+//        System.out.println(new JsonParser().parseSpy(text));
+//    }
 
     @Test
     public void test_parseOrder() {
