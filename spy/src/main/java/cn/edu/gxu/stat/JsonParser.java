@@ -23,7 +23,6 @@ public class JsonParser extends Parser {
 
     public JSONObject getDate(String text) {
         JSONObject content = JSONObject.parseObject(text);
-        System.out.println(content);
         return content;
     }
 
@@ -45,11 +44,10 @@ public class JsonParser extends Parser {
         spy.setCash(cash);
 //        spy.setLongtermLoan(0);
 //        spy.setShorttemLoan(0);
-        spy.setLongtermLoan(((BigDecimal) content.get("longtermLoan")).intValue());
-        spy.setShorttemLoan(((BigDecimal) content.get("shorttemLoan")).intValue());
+        spy.setLongtermLoan((Integer) content.get("longtermLoan"));
+        spy.setShorttemLoan((Integer) content.get("shorttemLoan"));
         spy.formatFactory(content.getString("factory"));
         spy.formatProduct(content.getString("product"));
-
         spy.setCertificate(new CertificatePojo().format(content.getString("certificate")));
         spy.formatProductLine(content.getString("prodLine"));
         return spy;

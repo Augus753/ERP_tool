@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static cn.edu.gxu.constant.enums.ProdLine;
+
 /**
  * @author atom.hu
  * @version V1.0
@@ -19,16 +21,19 @@ import java.util.Map;
  */
 public class ForecastPanel extends JPanel {
 
-    private String[] vName = {"组名", "上一年权益", "上一年资金", "毛利", "可贷款额度", "财务支出", "滞留产品", "预计权益", "最大剩余资金"};
+    private String[] vName = {"组名", "上一年权益", "上一年资金", "毛利", "可贷款额度", "财务支出", "最大滞留产品", "预计权益", "最大剩余资金"};
 
-    private static String year;
+//    private static String year;
 
-    public ForecastPanel(String key) {
-        year = key;
+    public ForecastPanel(String year) {
+        this.setBounds(0, 0, 1200, 610);
+        this.setLayout(null);
+
+//        year = key;
         String last_year = getLastYear(year);
         List<GroupScoresPo> scores = CacheManager.getScore(last_year);
         if (scores == null) {
-            JOptionPane.showMessageDialog(this, "缺少上一年度的经营数据，无法预测", "经营预测失败",
+            JOptionPane.showMessageDialog(this, "缺少上一年度的经营数据，无法预测." + last_year, "经营预测失败",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -43,37 +48,47 @@ public class ForecastPanel extends JPanel {
                 .toArray(ForecastPo[]::new);
 
         Map<String, ProfitDao> profitMap = orderStat.calProfit(year);
-        if (profitMap.size() == 0) {
-            JOptionPane.showMessageDialog(this, "缺少年度订单信息，无法预测", "经营预测失败",
+        if (profitMap == null || profitMap.size() == 0) {
+            JOptionPane.showMessageDialog(this, "缺少" + year + "订单信息，无法预测", "经营预测失败",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         for (ForecastPo forecast : profitData) {
-            SpyPo spyPo = CacheManager.getSpy(forecast.getGroupName());
+            String spyKey = CacheManager.generateGroupKey(last_year, forecast.getGroupName());
+            SpyPo spyPo = CacheManager.getSpy(spyKey);
             if (spyPo == null) continue;
 
             forecast.setLastYearCash(spyPo.getCash());
             ProfitDao profitDao = profitMap.get(forecast.getGroupName());
-            if (profitDao != null)
-                forecast.setProfit(profitDao.getProfit());
-//            剩余贷款额度
-            forecast.setRemainTemLoan(CacheManager.getConfig().getLoanTimes() * profitDao.getProfit() - (spyPo.getShorttemLoan() + spyPo.getLongtermLoan()));
+            if (profitDao == null)
+                profitDao = new ProfitDao();
+            forecast.setProfit(profitDao.getProfit());
+
+            forecast.setRemainTemLoan(
+                    Math.max(CacheManager.getConfig().getLoanTimes() * forecast.getLastYearRights() - (spyPo.getShorttemLoan() + spyPo.getLongtermLoan()), 0));
 //             预计滞留产品
-            int totalNum = (int) (spyPo.getProdLine().getQzd() * (360 / (float) CacheManager.getConfig().getQzdProductTimes())
-                    + spyPo.getProdLine().getRx() * (360 / (float) CacheManager.getConfig().rxProductTimes)
-                    + spyPo.getProdLine().getRx() * (360 / (float) CacheManager.getConfig().sgxProductTimes));
+            int totalNum = spyPo.getProdLine().getQzd() * (360 / CacheManager.getConfig().getQzdProductTimes())
+                    + spyPo.getProdLine().getRx() * (360 / CacheManager.getConfig().rxProductTimes)
+                    + spyPo.getProdLine().getSgx() * (360 / CacheManager.getConfig().sgxProductTimes);
             forecast.setRemainProduct(totalNum - profitDao.getNum());
 
             Finance finance = new Finance();
             finance.setAdministration(CacheManager.getConfig().administration);
-            finance.setDepreciation(spyPo.getProdLine().getRx() * CacheManager.getConfig().rxDepreciation
-                    + spyPo.getProdLine().getQzd() * CacheManager.getConfig().qzdDepreciation
-                    + spyPo.getProdLine().getSgx() * CacheManager.getConfig().sgxDepreciation);
+
+
+            Map<String, Integer> lines = spyPo.getProdLine().CompletedNum();
+            if (lines != null && lines.size() > 0) {
+                finance.setDepreciation((int) (lines.getOrDefault(ProdLine.RX_X4.name, 0) * CacheManager.getConfig().rxDepreciation
+                        + lines.getOrDefault(ProdLine.QZD_X3.name, 0) * CacheManager.getConfig().qzdDepreciation
+                        + lines.getOrDefault(ProdLine.SGX_X1.name, 0) * CacheManager.getConfig().sgxDepreciation));
+            }
+
             finance.setInterest((int) (spyPo.getLongtermLoan() * MainConfig.longLoanRate + spyPo.getShorttemLoan() * MainConfig.shortLoanRate));
             finance.setUpkeep(spyPo.getProdLine().getRx() * CacheManager.getConfig().rxUpKeep
                     + spyPo.getProdLine().getQzd() * CacheManager.getConfig().qzdUpKeep
                     + spyPo.getProdLine().getSgx() * CacheManager.getConfig().sgxUpKeep);
+            finance.setFactoryRent(CacheManager.getConfig().getFactoryRent() * spyPo.getFactory().rentNum);
             forecast.setFinance(finance);
             forecast.calForecastRights();
             forecast.calRemainMaxCash();
@@ -87,7 +102,8 @@ public class ForecastPanel extends JPanel {
                     row[2] = forecast.getLastYearCash();
                     row[3] = forecast.getProfit();
                     row[4] = forecast.getRemainTemLoan();
-                    row[5] = forecast.getFinance().sum();
+                    if (forecast.getFinance() == null) return row;
+                    row[5] = forecast.getFinance().sumRight();
                     row[6] = forecast.getRemainProduct();
                     row[7] = forecast.getForecastRights();
                     row[8] = forecast.getRemainMaxCash();
@@ -95,11 +111,15 @@ public class ForecastPanel extends JPanel {
                 })
                 .toArray(Object[][]::new);
         loadTable(data);
+        this.setVisible(true);
     }
 
     private String getLastYear(String year) {
-        int idx = Arrays.binarySearch(MainConfig.RUN_YEAR, year);
-        return idx > 0 ? MainConfig.RUN_YEAR[idx - 1] : null;
+        for (int i = 1; i < MainConfig.RUN_YEAR.length; i++) {
+            if (MainConfig.RUN_YEAR[i].equals(year))
+                return MainConfig.RUN_YEAR[i - 1];
+        }
+        return null;
     }
 
 
@@ -125,7 +145,7 @@ public class ForecastPanel extends JPanel {
         }
 
         JScrollPane jp = new JScrollPane(table);
-        jp.setBounds(60, 60, 800, 600);
+        jp.setBounds(50, 10, 1000, 600);
         add(jp);
     }
 }

@@ -12,6 +12,11 @@ import cn.edu.gxu.persist.CacheManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ConfigPanel extends JPanel {
 
@@ -21,9 +26,11 @@ public class ConfigPanel extends JPanel {
     private static Object[] productLineName = {"费用名称", "手工线", "全自动", "柔线"};
     private Object[][] productLineData = new Object[3][productLineName.length];
 
-    private static Object[] otherName = {"管理费(年)", "贷款倍数"};
+    private static Object[] otherName = {"管理费(年)", "贷款倍数", "厂房租金"};
     private Object[][] otherData = new Object[1][otherName.length];
 
+    private static String[] groupName = {"参赛组名", "参赛组名"};
+    private String[][] groupData = new String[15][groupName.length];
 
     Font font = new Font("黑体", Font.PLAIN, 15);
 
@@ -32,12 +39,10 @@ public class ConfigPanel extends JPanel {
 
         this.setBounds(100, 0, 900, 600);
         this.setLayout(null);
-//        data[0][1] = 20;
-//        产品成本配置
         showTable();
 
         JButton button = new JButton("修改");
-        button.setBounds(540, 300, 100, 80);
+        button.setBounds(300, 400, 100, 80);
         button.setFont(font);
 
         button.addActionListener(e -> {
@@ -50,6 +55,8 @@ public class ConfigPanel extends JPanel {
                 return;
             }
             showTable();
+            JOptionPane.showMessageDialog(this, "修改成功", "修改成功",
+                    JOptionPane.PLAIN_MESSAGE);
         });
 
         this.add(button);
@@ -67,9 +74,9 @@ public class ConfigPanel extends JPanel {
         CacheManager.getConfig().setQzdProductTimes(Integer.parseInt(productLineData[0][2] + ""));
         CacheManager.getConfig().setRxProductTimes(Integer.parseInt(productLineData[0][3] + ""));
 
-        CacheManager.getConfig().setSgxDepreciation(Integer.parseInt(productLineData[1][1] + ""));
-        CacheManager.getConfig().setQzdDepreciation(Integer.parseInt(productLineData[1][2] + ""));
-        CacheManager.getConfig().setRxDepreciation(Integer.parseInt(productLineData[1][3] + ""));
+        CacheManager.getConfig().setSgxDepreciation(Float.parseFloat(productLineData[1][1] + ""));
+        CacheManager.getConfig().setQzdDepreciation(Float.parseFloat(productLineData[1][2] + ""));
+        CacheManager.getConfig().setRxDepreciation(Float.parseFloat(productLineData[1][3] + ""));
 
         CacheManager.getConfig().setSgxUpKeep(Integer.parseInt(productLineData[2][1] + ""));
         CacheManager.getConfig().setQzdUpKeep(Integer.parseInt(productLineData[2][2] + ""));
@@ -77,6 +84,13 @@ public class ConfigPanel extends JPanel {
 
         CacheManager.getConfig().setAdministration(Integer.parseInt(otherData[0][0] + ""));
         CacheManager.getConfig().setLoanTimes(Integer.parseInt(otherData[0][1] + ""));
+        CacheManager.getConfig().setFactoryRent(Integer.parseInt(otherData[0][2] + ""));
+
+        CacheManager.getConfig().setGroupNames(
+                Stream.of(groupData)
+                        .flatMap((Function<String[], Stream<?>>) strings -> Arrays.stream(strings.clone()))
+                        .distinct()
+                        .toArray(String[]::new));
     }
 
     private void loadConfig() {
@@ -101,6 +115,14 @@ public class ConfigPanel extends JPanel {
 
         otherData[0][0] = CacheManager.getConfig().getAdministration();
         otherData[0][1] = CacheManager.getConfig().getLoanTimes();
+        otherData[0][2] = CacheManager.getConfig().getFactoryRent();
+
+        for (int i = 0; i < CacheManager.getConfig().getGroupNames().length; i += 2) {
+            groupData[i / 2][0] = CacheManager.getConfig().getGroupNames()[i];
+            if (i < CacheManager.getConfig().getGroupNames().length - 1) {
+                groupData[i / 2][1] = CacheManager.getConfig().getGroupNames()[i + 1];
+            }
+        }
     }
 
     private void showTable() {
@@ -124,6 +146,13 @@ public class ConfigPanel extends JPanel {
         JScrollPane jp3 = new JScrollPane(otherTable);
         jp3.setBounds(20, 300, 500, 80);
         add(jp3);
+
+        TableModel groupTable = new TableModel(groupData, groupName);
+        groupTable.setEditable();
+        groupTable.setRowHeight(25);
+        JScrollPane jp4 = new JScrollPane(groupTable);
+        jp4.setBounds(550, 20, 200, 410);
+        add(jp4);
     }
 
 

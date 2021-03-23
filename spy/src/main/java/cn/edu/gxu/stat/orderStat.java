@@ -21,6 +21,7 @@ public class orderStat {
 
     public static Map<String, ProfitDao> calProfit(String year) {
         List<OrderPo> orderPos = CacheManager.getOrder(year);
+        if (orderPos == null || orderPos.size() == 0) return null;
         Map<String, ProfitDao> result = new HashMap<>();
         for (OrderPo o : orderPos) {
             ProfitDao profit = result.getOrDefault(o.getOrderResult(), new ProfitDao());

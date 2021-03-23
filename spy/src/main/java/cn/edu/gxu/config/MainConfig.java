@@ -60,29 +60,11 @@ public class MainConfig {
             "第六年",
     };
 
-    //最好用注解反射
-    public static Map<enums.Product, enums.CertificateStatus> CERT_MAP = new HashMap();
-
-//    //    贷款倍数
-//    public static int loanTimes = 2;
-//    public static int sgxProductTimes = 100;
-//    public static int qzdProductTimes = 60;
-//    public static int rxProductTimes = 48;
-//    //折旧
-//    public static int sgxDepreciation = 15;
-//    public static int qzdDepreciation = 22;
-//    public static int rxDepreciation = 30;
-//    //维修费
-//    public static int sgxUpKeep = 5;
-//    public static int qzdUpKeep = 15;
-//    public static int rxUpKeep = 20;
-//    //管理费
-//    public static int administration = 60;
 
     //    贷款利率
     public static float longLoanRate = (float) 0.1;
     public static float shortLoanRate = (float) 0.05;
 
-
-    public static float DefaultTax= (float) 0.2;
+    //所得税率
+    public static float DefaultTax = (float) 0.2;
 }

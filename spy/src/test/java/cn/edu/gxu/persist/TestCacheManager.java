@@ -22,7 +22,7 @@ public class TestCacheManager {
 //        CacheManager.getInstance()
         CacheMoodle cacheMoodle = new CacheMoodle();
         ErpConfig config = new ErpConfig();
-        config.setGroupNames("第1组，第2组，第3组");
+//        config.setGroupNames("第1组，第2组，第3组");
         config.setShortTemLoanRate(0.05f);
         config.setLongTemLoanRate(0.1f);
         cacheMoodle.setConfig(config);

@@ -44,7 +44,7 @@ public class SpyDetailDialog extends JDialog {
         l4.setFont(font);
 
         JLabel l5 = new JLabel("市场：" + spyPo.getCertificate().showMarket());
-        l5.setBounds(30, 120, 300, 30);
+        l5.setBounds(30, 120, 470, 30);
         conn.add(l5);
         l5.setFont(font);
 
@@ -54,17 +54,17 @@ public class SpyDetailDialog extends JDialog {
         l51.setFont(font);
 
         JLabel l6 = new JLabel("库存：" + spyPo.getProduct().show().replace(",", "，  "));
-        l6.setBounds(30, 220, 300, 30);
+        l6.setBounds(30, 220, 470, 30);
         conn.add(l6);
         l6.setFont(font);
 
         JLabel l7 = new JLabel("生产线：" + spyPo.getProdLine().showDetail());
-        l7.setBounds(30, 270, 300, 30);
+        l7.setBounds(30, 270, 470, 30);
         conn.add(l7);
         l7.setFont(font);
 
         JLabel l8 = new JLabel("在产产品：" + spyPo.getProdLine().showOnLine());
-        l8.setBounds(30, 320, 300, 30);
+        l8.setBounds(30, 320, 470, 30);
         conn.add(l8);
         l8.setFont(font);
         JLabel l9 = new JLabel("");

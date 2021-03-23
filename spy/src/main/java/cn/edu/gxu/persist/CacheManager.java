@@ -63,7 +63,7 @@ public class CacheManager {
             cache = JSONObject.parseObject(text, CacheMoodle.class);
             System.out.println("读取到：" + cache);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("未读取到数据文件");
         }
     }
 

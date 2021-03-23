@@ -1,5 +1,7 @@
 package cn.edu.gxu.pojo;
 
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * @author atom.hu
  * @version V1.0
@@ -16,6 +18,8 @@ public class Finance {
     private int administration;
     //折旧费
     private int depreciation;
+    //厂房租金
+    private int factoryRent;
 
     public int getUpkeep() {
         return upkeep;
@@ -49,7 +53,26 @@ public class Finance {
         this.depreciation = depreciation;
     }
 
-    public int sum() {
-        return upkeep + interest + administration + depreciation;
+    public int getFactoryRent() {
+        return factoryRent;
+    }
+
+    public void setFactoryRent(int factoryRent) {
+        this.factoryRent = factoryRent;
+    }
+
+    public int sumRight() {
+        //   （权益） 维修费+贷款利息+管理费+折旧费+厂房租金
+        return upkeep + interest + administration + depreciation + factoryRent;
+    }
+
+    public int sumCash() {
+        //    （现金）    维修费+贷款利息+管理费+厂房租金
+        return upkeep + interest + administration + factoryRent;
+    }
+
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this);
     }
 }

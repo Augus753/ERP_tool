@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static cn.edu.gxu.config.MainConfig.MONTH_NAME;
+
 public class OrderListPanel extends JPanel {
 
     /**
@@ -52,6 +54,7 @@ public class OrderListPanel extends JPanel {
     JButton profitButton = new JButton("毛利");
     JButton marketShareButton = new JButton("市场份额");
     JButton productNumButton = new JButton("产品数量");
+    JButton deliveryMonthNumButton = new JButton("交货期数量");
 
     Font cmbFont = new Font("黑体", Font.BOLD, 14);
     Font font = new Font("黑体", Font.PLAIN, 13);
@@ -89,6 +92,7 @@ public class OrderListPanel extends JPanel {
             //订单列表
             orderListButton.setBounds(0, 100, 100, 80);
             orderListButton.setFont(font);
+            orderListButton.setOpaque(false); // 设置为透明
             // 给按钮加上监听
             orderListButton.addActionListener(e -> {
                 loadTable(data, vName);
@@ -98,6 +102,8 @@ public class OrderListPanel extends JPanel {
             //毛利
             profitButton.setBounds(0, 180, 100, 80);
             profitButton.setFont(font);
+            orderListButton.setOpaque(false); // 设置为透明
+
             // 给按钮加上监听
             profitButton.addActionListener(e -> {
                 showProfit();
@@ -120,6 +126,14 @@ public class OrderListPanel extends JPanel {
             productNumButton.addActionListener(e -> {
                 showProductNum(data, enums.Product.values());
             });
+
+            //市场订单数量占比
+            deliveryMonthNumButton.setBounds(0, 420, 100, 80);
+            deliveryMonthNumButton.setFont(font);
+            // 给按钮加上监听
+            deliveryMonthNumButton.addActionListener(e -> {
+                showDeliveryMonthNum(enums.Product.values());
+            });
         }
 
         reloadData();
@@ -131,6 +145,12 @@ public class OrderListPanel extends JPanel {
         this.add(marketShareButton);
         this.add(productNumButton);
         this.setVisible(true);
+    }
+
+    private void showDeliveryMonthNum(enums.Product[] values) {
+        List<OrderPo> orders = CacheManager.getOrder(year);
+//        MONTH_NAME
+//                组名_产品名称_月份
     }
 
     private void drawOrderNumOptionCmb() {
@@ -202,7 +222,7 @@ public class OrderListPanel extends JPanel {
             //组下拉框
             JComboBox cmb = new JComboBox();    //创建JComboBox
             cmb.addItem(defaultGroupCmd);    //向下拉列表中添加一项
-            for (String g : MainConfig.GROUP_NAME) {
+            for (String g : CacheManager.getConfig().getGroupNames()) {
                 cmb.addItem(g);
             }
             cmb.setBounds(30, 0, 100, 10);
@@ -217,7 +237,7 @@ public class OrderListPanel extends JPanel {
             //交货期下拉框
             JComboBox cmb = new JComboBox();    //创建JComboBox
             cmb.addItem(defaultMonthCmd);    //向下拉列表中添加一项
-            for (String g : MainConfig.MONTH_NAME) {
+            for (String g : MONTH_NAME) {
                 cmb.addItem(g);
             }
             cmb.setBounds(30, 0, 100, 10);
@@ -344,19 +364,19 @@ public class OrderListPanel extends JPanel {
         boolean firstGroupName = true;
         for (int i = 0; i < num; ) {
             for (enums.Product product : products) {
-                String key1 = sequenceGroupName[groupNameIdx] + "_" + enums.Market.LOCAL_MARKET.marketName + "_" + product.product;
+                String key1 = sequenceGroupName[groupNameIdx] + "_" + enums.Market.LOCAL_MARKET_1.marketName + "_" + product.product;
                 ProfitDao p1 = numMap.get(key1);
 
-                String key2 = sequenceGroupName[groupNameIdx] + "_" + enums.Market.REGIONAL_MARKET.marketName + "_" + product.product;
+                String key2 = sequenceGroupName[groupNameIdx] + "_" + enums.Market.REGIONAL_MARKET_2.marketName + "_" + product.product;
                 ProfitDao p2 = numMap.get(key2);
 
-                String key3 = sequenceGroupName[groupNameIdx] + "_" + enums.Market.DOMESTIC_MARKET.marketName + "_" + product.product;
+                String key3 = sequenceGroupName[groupNameIdx] + "_" + enums.Market.DOMESTIC_MARKET_3.marketName + "_" + product.product;
                 ProfitDao p3 = numMap.get(key3);
 
-                String key4 = sequenceGroupName[groupNameIdx] + "_" + enums.Market.ASIA_MARKET.marketName + "_" + product.product;
+                String key4 = sequenceGroupName[groupNameIdx] + "_" + enums.Market.ASIA_MARKET_4.marketName + "_" + product.product;
                 ProfitDao p4 = numMap.get(key4);
 
-                String key5 = sequenceGroupName[groupNameIdx] + "_" + enums.Market.GLOBAL_MARKET.marketName + "_" + product.product;
+                String key5 = sequenceGroupName[groupNameIdx] + "_" + enums.Market.GLOBAL_MARKET_5.marketName + "_" + product.product;
                 ProfitDao p5 = numMap.get(key5);
 
                 int totalNum = (p1 == null ? 0 : p1.getSales())
@@ -438,15 +458,15 @@ public class OrderListPanel extends JPanel {
 //            group[4] = shareMap.getOrDefault(groupName + "_" + enums.Market.ASIA_MARKET.marketName, new ProfitDao()).getSales();
 //            group[5] = shareMap.getOrDefault(groupName + "_" + enums.Market.GLOBAL_MARKET.marketName, new ProfitDao()).getSales();
 //            销售额占比
-            ProfitDao p1 = shareMap.get(groupName + "_" + enums.Market.LOCAL_MARKET.marketName);
+            ProfitDao p1 = shareMap.get(groupName + "_" + enums.Market.LOCAL_MARKET_1.marketName);
             group[1] = p1 == null ? 0 : df.format(p1.getSales() / (float) marketData.get(p1.getMarketName()));
-            ProfitDao p2 = shareMap.get(groupName + "_" + enums.Market.REGIONAL_MARKET.marketName);
+            ProfitDao p2 = shareMap.get(groupName + "_" + enums.Market.REGIONAL_MARKET_2.marketName);
             group[2] = p2 == null ? 0 : df.format(p2.getSales() / (float) marketData.get(p2.getMarketName()));
-            ProfitDao p3 = shareMap.get(groupName + "_" + enums.Market.DOMESTIC_MARKET.marketName);
+            ProfitDao p3 = shareMap.get(groupName + "_" + enums.Market.DOMESTIC_MARKET_3.marketName);
             group[3] = p3 == null ? 0 : df.format(p3.getSales() / (float) marketData.get(p3.getMarketName()));
-            ProfitDao p4 = shareMap.get(groupName + "_" + enums.Market.ASIA_MARKET.marketName);
+            ProfitDao p4 = shareMap.get(groupName + "_" + enums.Market.ASIA_MARKET_4.marketName);
             group[4] = p4 == null ? 0 : df.format(p4.getSales() / (float) marketData.get(p4.getMarketName()));
-            ProfitDao p5 = shareMap.get(groupName + "_" + enums.Market.GLOBAL_MARKET.marketName);
+            ProfitDao p5 = shareMap.get(groupName + "_" + enums.Market.GLOBAL_MARKET_5.marketName);
             group[5] = p5 == null ? 0 : df.format(p5.getSales() / (float) marketData.get(p5.getMarketName()));
             return group;
         }).toArray(Object[][]::new);

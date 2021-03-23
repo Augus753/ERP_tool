@@ -2,7 +2,7 @@ package cn.edu.gxu.pojo;
 
 import cn.edu.gxu.config.MainConfig;
 import cn.edu.gxu.persist.CacheManager;
-import cn.edu.gxu.persist.ErpConfig;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author atom.hu
@@ -113,10 +113,18 @@ public class ForecastPo {
     }
 
     public void calForecastRights() {
-        this.forecastRights = (int) (lastYearRights + profit * MainConfig.DefaultTax - finance.sum());
+//        年末权益：去年权益+税后毛利-财务费用
+        this.forecastRights = (int) (lastYearRights + profit * (1 - MainConfig.DefaultTax) - finance.sumRight()) - 100;
     }
 
     public void calRemainMaxCash() {
-        this.remainMaxCash = lastYearRights + profit + remainTemLoan * CacheManager.getConfig().getLoanTimes() - onLineProduct * CacheManager.getConfig().getP2Cost();
+//        年末最大剩余现金：剩余现金+毛利+剩余贷款额度-(在制品价值+滞留产品价值)-维修费-管理费-租金
+        this.remainMaxCash = lastYearCash + profit + remainTemLoan - (onLineProduct + remainProduct) * CacheManager.getConfig().getP3Cost() - finance.sumCash() - 100;
     }
+
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this);
+    }
+
 }

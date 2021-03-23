@@ -44,7 +44,7 @@ public class SpyPo {
     public int longtermLoan;
     public String material;
     public Product product;
-    public CertificatePojo certificatePojo;
+    public CertificatePojo certificate;
     public Integer cash;
     public Factory factory;
 
@@ -115,11 +115,11 @@ public class SpyPo {
     }
 
     public CertificatePojo getCertificate() {
-        return certificatePojo;
+        return certificate;
     }
 
     public void setCertificate(CertificatePojo certificatePojo) {
-        this.certificatePojo = certificatePojo;
+        this.certificate = certificatePojo;
     }
 
     public Factory getFactory() {
@@ -135,19 +135,20 @@ public class SpyPo {
         this.factory = new Factory();
         for (String part : parts) {
             String[] a = part.split("_");
-            if (enums.FactoryStatus.NOT_OWNED.status == NumberUtils.toInt(a[1])) {
+            if (enums.FactoryStatus.NOT_OWNED_1.status == NumberUtils.toInt(a[1])) {
                 this.factory.notOwnedNum += 1;
-            } else if (enums.FactoryStatus.BUY.status == NumberUtils.toInt(a[1])) {
+            } else if (enums.FactoryStatus.BUY_2.status == NumberUtils.toInt(a[1])) {
                 this.factory.buyNum += 1;
-            } else if (enums.FactoryStatus.RENT.status == NumberUtils.toInt(a[1])) {
+            } else if (enums.FactoryStatus.RENT_3.status == NumberUtils.toInt(a[1])) {
                 this.factory.rentNum += 1;
             }
         }
     }
 
     public void formatProduct(String factoryText) {
-        String[] parts = factoryText.split(",");
         this.product = new Product();
+        String[] parts = factoryText.split(",");
+        if (StringUtils.isEmpty(factoryText)) return;
         for (String part : parts) {
             String[] a = part.split("_");
             String name = StringUtils.toRootUpperCase(a[0]);
@@ -168,6 +169,8 @@ public class SpyPo {
 
     public void formatProductLine(String prodLine) {
         this.prodLine = new ProdLine();
+        if (StringUtils.isEmpty(prodLine)) return;
+
         String[] parts = prodLine.split(",");
         Map<String, Integer> detail = new HashMap<>();
         for (String part : parts) {
@@ -176,11 +179,11 @@ public class SpyPo {
             String productLineName = StringUtils.toRootUpperCase(a[0]);
             int status = NumberUtils.toInt(a[1]);
             String productName = StringUtils.toRootUpperCase(a[2]);
-            if (enums.ProdLine.X1.name().equals(productLineName)) {
+            if (enums.ProdLine.SGX_X1.line.equals(productLineName)) {
                 this.prodLine.sgx++;
-            } else if (enums.ProdLine.X3.name().equals(productLineName)) {
+            } else if (enums.ProdLine.QZD_X3.line.equals(productLineName)) {
                 this.prodLine.qzd++;
-            } else if (enums.ProdLine.X4.name().equals(productLineName)) {
+            } else if (enums.ProdLine.RX_X4.line.equals(productLineName)) {
                 this.prodLine.rx++;
             }
 
@@ -304,7 +307,7 @@ public class SpyPo {
     }
 
     public class ProdLine {
-        public Map<String, Integer> detail;
+        public Map<String, Integer> detail;//<生产线名称_状态_产品名称>
         public int sgx;
         public int qzd;
         public int rx;
@@ -360,17 +363,34 @@ public class SpyPo {
             return result;
         }
 
+        //        统计建成的生产线<生产线名称，数量>
+        public Map<String, Integer> CompletedNum() {
+            if (detail == null || detail.isEmpty()) return null;
+            Map<String, Integer> data = new HashMap<>();
+            for (Map.Entry<String, Integer> entry : detail.entrySet()) {
+                String[] keys = entry.getKey().split("_");
+                if (!enums.LineStatus.BUILD_1.remark.equals(keys[1])) {
+                    int n = data.getOrDefault(keys[0], 0);
+                    data.put(keys[0], n + entry.getValue());
+                }
+            }
+            return data;
+        }
+
         public String showDetail() {
             if (detail == null || detail.isEmpty()) return "";
             StringBuilder builder = new StringBuilder();
-            Map<String, Integer> data = new HashMap<>();
+//            Map<String, Integer> data = new HashMap<>();
+//            for (Map.Entry<String, Integer> entry : detail.entrySet()) {
+//                String key = entry.getKey().substring(0, entry.getKey().length() - 3);
+//                int n = data.getOrDefault(key, 0);
+//                data.put(key, n + entry.getValue());
+//            }
+//            for (Map.Entry<String, Integer> entry : data.entrySet()) {
+//                builder.append(entry.getValue()).append(" ");
+//                builder.append(entry.getKey()).append("，");
+//            }
             for (Map.Entry<String, Integer> entry : detail.entrySet()) {
-                String key = entry.getKey().substring(0, entry.getKey().length() - 3);
-                System.out.println("-----" + key);
-                int n = data.getOrDefault(key, 0);
-                data.put(key, n + entry.getValue());
-            }
-            for (Map.Entry<String, Integer> entry : data.entrySet()) {
                 builder.append(entry.getValue()).append(" ");
                 builder.append(entry.getKey()).append("，");
             }
@@ -382,7 +402,7 @@ public class SpyPo {
             StringBuilder builder = new StringBuilder();
             Map<String, Integer> data = new HashMap<>();
             for (Map.Entry<String, Integer> entry : detail.entrySet()) {
-                if (enums.LineStatus.ONLINE.remark.equals(entry.getKey().split("_")[1])) {
+                if (enums.LineStatus.ONLINE_4.remark.equals(entry.getKey().split("_")[1])) {
                     String key = entry.getKey().substring(entry.getKey().length() - 2);
                     int n = data.getOrDefault(key, 0);
                     data.put(key, n + entry.getValue());

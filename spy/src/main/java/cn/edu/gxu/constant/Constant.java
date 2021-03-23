@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class Constant {
     //最大展示的广告排名
-    public static final int MAX_AD_NUM = 10;
+    public static final int MAX_AD_NUM = 20;
     //最大展示的经营结果排名
     public static final int MAX_SCORE_NUM = 25;
     //间谍预览中显示的最小产品数

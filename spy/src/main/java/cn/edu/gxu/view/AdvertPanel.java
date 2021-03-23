@@ -30,11 +30,11 @@ public class AdvertPanel extends JPanel {
     private Object[][] data = new Object[Constant.MAX_AD_NUM][enums.Market.values().length + 1];
 
     private Object[] vName = {"排名",
-            enums.Market.LOCAL_MARKET.marketName,
-            enums.Market.REGIONAL_MARKET.marketName,
-            enums.Market.DOMESTIC_MARKET.marketName,
-            enums.Market.ASIA_MARKET.marketName,
-            enums.Market.GLOBAL_MARKET.marketName};
+            enums.Market.LOCAL_MARKET_1.marketName,
+            enums.Market.REGIONAL_MARKET_2.marketName,
+            enums.Market.DOMESTIC_MARKET_3.marketName,
+            enums.Market.ASIA_MARKET_4.marketName,
+            enums.Market.GLOBAL_MARKET_5.marketName};
 
     JTextField tf = new JTextField("请输入广告json报文");
 
@@ -45,15 +45,15 @@ public class AdvertPanel extends JPanel {
 
     public AdvertPanel(String year) {
         AdvertPanel.year = year;
-        this.setBounds(100, 0, 900, 460);
+        this.setBounds(100, 0, 900, 600);
 
         this.setLayout(null);
 
-        button.setBounds(540, 10, 100, 30);
+        button.setBounds(540, 10, 100, 40);
 
         button.setFont(font);
 
-        tf.setBounds(100, 0, 250, 50);
+        tf.setBounds(100, 0, 250, 60);
 
         // 给文本框加上鼠标单击事件监听
         tf.addMouseListener(new MouseAdapter() {
@@ -65,12 +65,12 @@ public class AdvertPanel extends JPanel {
         });
 
         cmb.addItem("--请选择--");    //向下拉列表中添加一项
-        cmb.addItem(enums.Market.LOCAL_MARKET.marketName);
-        cmb.addItem(enums.Market.REGIONAL_MARKET.marketName);
-        cmb.addItem(enums.Market.DOMESTIC_MARKET.marketName);
-        cmb.addItem(enums.Market.ASIA_MARKET.marketName);
-        cmb.addItem(enums.Market.GLOBAL_MARKET.marketName);
-        cmb.setBounds(400, 10, 100, 30);
+        cmb.addItem(enums.Market.LOCAL_MARKET_1.marketName);
+        cmb.addItem(enums.Market.REGIONAL_MARKET_2.marketName);
+        cmb.addItem(enums.Market.DOMESTIC_MARKET_3.marketName);
+        cmb.addItem(enums.Market.ASIA_MARKET_4.marketName);
+        cmb.addItem(enums.Market.GLOBAL_MARKET_5.marketName);
+        cmb.setBounds(400, 10, 100, 40);
 
         for (int i = 0; i < data.length; i++) {
             data[i][0] = i + 1;
@@ -98,8 +98,8 @@ public class AdvertPanel extends JPanel {
 
         //文本框输入
         String value = Objects.requireNonNull(cmb.getSelectedItem()).toString();
-        System.out.println("下拉列表：" + value);
-        System.out.println("输入框：" + text);
+//        System.out.println("下拉列表：" + value);
+//        System.out.println("输入框：" + text);
 
         if ("--请选择--".equals(value)) {
             JOptionPane.showMessageDialog(cmb, "请选择市场", "输入错误",
@@ -163,7 +163,7 @@ public class AdvertPanel extends JPanel {
         }
 
         JScrollPane jp = new JScrollPane(table);
-        jp.setBounds(0, 60, 800, 400);
+        jp.setBounds(0, 70, 800, 600);
         add(jp);
     }
 }

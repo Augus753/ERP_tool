@@ -1,10 +1,11 @@
 package cn.edu.gxu.pojo;
 
-import cn.edu.gxu.config.MainConfig;
 import cn.edu.gxu.constant.enums;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -134,9 +135,13 @@ public class CertificatePojo {
 
     //"S1_1,S2_1,S3_1,S4_1,S5_2,ZS1_2,ZS2_2,P1_3,P2_1,P3_1,P4_1,P5_1"
     public CertificatePojo format(String text) {
+        if (StringUtils.isEmpty(text)) return this;
+
         String[] parts = text.split(",");
         for (String part : parts) {
             String[] a = part.split("_");
+            System.out.println(a[0] + "--------" + NumberUtils.toInt(a[1]));
+
             enums.CertificateStatus certificateStatus = enums.CertificateStatus.change(NumberUtils.toInt(a[1]));
             switch (a[0]) {
                 case "S1":
@@ -182,34 +187,33 @@ public class CertificatePojo {
 
     public String showMarket() {
         String result = "";
-        if (enums.CertificateStatus.YEAR_1.status.equals(domesticMarket.status)) {
+        if (enums.CertificateStatus.COMPLETE_1.status.equals(domesticMarket.status)) {
             result += "国内,";
         }
-        if (enums.CertificateStatus.YEAR_1.status.equals(asiaMarket.status)) {
+        if (enums.CertificateStatus.COMPLETE_1.status.equals(asiaMarket.status)) {
             result += "亚,";
         }
-        if (enums.CertificateStatus.YEAR_1.status.equals(globalMarket.status)) {
+        if (enums.CertificateStatus.COMPLETE_1.status.equals(globalMarket.status)) {
             result += "国际";
         }
         return result;
     }
 
     public String showProduct() {
-        if (MainConfig.CERT_MAP.size() == 0) {
-            MainConfig.CERT_MAP.put(enums.Product.P1, p1);
-            MainConfig.CERT_MAP.put(enums.Product.P2, p2);
-            MainConfig.CERT_MAP.put(enums.Product.P3, p3);
-            MainConfig.CERT_MAP.put(enums.Product.P4, p4);
-            MainConfig.CERT_MAP.put(enums.Product.P5, p5);
-        }
+        Map<enums.Product, enums.CertificateStatus> certMap = new HashMap<>();
+        certMap.put(enums.Product.P1, p1);
+        certMap.put(enums.Product.P2, p2);
+        certMap.put(enums.Product.P3, p3);
+        certMap.put(enums.Product.P4, p4);
+        certMap.put(enums.Product.P5, p5);
 
         StringBuilder builder = new StringBuilder();
         StringBuilder seg = new StringBuilder();
         for (enums.CertificateStatus cert : enums.CertificateStatus.values()) {
-            if (cert == enums.CertificateStatus.YEAR_3) {
+            if (cert == enums.CertificateStatus.UN_RESEARCH_3) {
                 continue;
             }
-            for (Map.Entry<enums.Product, enums.CertificateStatus> entry : MainConfig.CERT_MAP.entrySet()) {
+            for (Map.Entry<enums.Product, enums.CertificateStatus> entry : certMap.entrySet()) {
                 if (entry.getValue() == cert) {
                     seg.append(entry.getKey().product).append(",");
                 }
@@ -220,7 +224,6 @@ public class CertificatePojo {
                 seg.delete(0, seg.length());
             }
         }
-        System.out.println(builder.toString());
         return builder.toString();
     }
 

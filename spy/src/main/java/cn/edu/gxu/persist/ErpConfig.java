@@ -1,5 +1,6 @@
 package cn.edu.gxu.persist;
 
+import cn.edu.gxu.config.MainConfig;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -24,8 +25,6 @@ public class ErpConfig {
     private int P4Cost;
     //    P5成本
     private int P5Cost;
-    //组名，用,分割
-    private String groupNames;
     //    贷款倍数
     private int loanTimes = 2;
     //生产时间
@@ -33,15 +32,20 @@ public class ErpConfig {
     public int qzdProductTimes = 60;
     public int rxProductTimes = 48;
     //折旧
-    public int sgxDepreciation = 15;
-    public int qzdDepreciation = 22;
-    public int rxDepreciation = 30;
+    public float sgxDepreciation = 15;
+    public float qzdDepreciation = (float) 22.5;
+    public float rxDepreciation = 30;
     //维修费
     public int sgxUpKeep = 5;
     public int qzdUpKeep = 15;
     public int rxUpKeep = 20;
     //管理费
     public int administration = 60;
+
+    //厂房租金
+    public int factoryRent = 60;
+
+    public String[] groupNames = MainConfig.GROUP_NAME;
 
     public float getShortTemLoanRate() {
         return shortTemLoanRate;
@@ -99,14 +103,6 @@ public class ErpConfig {
         P5Cost = p5Cost;
     }
 
-    public String getGroupNames() {
-        return groupNames;
-    }
-
-    public void setGroupNames(String groupNames) {
-        this.groupNames = groupNames;
-    }
-
     public int getLoanTimes() {
         return loanTimes;
     }
@@ -139,27 +135,27 @@ public class ErpConfig {
         this.rxProductTimes = rxProductTimes;
     }
 
-    public int getSgxDepreciation() {
+    public float getSgxDepreciation() {
         return sgxDepreciation;
     }
 
-    public void setSgxDepreciation(int sgxDepreciation) {
+    public void setSgxDepreciation(float sgxDepreciation) {
         this.sgxDepreciation = sgxDepreciation;
     }
 
-    public int getQzdDepreciation() {
+    public float getQzdDepreciation() {
         return qzdDepreciation;
     }
 
-    public void setQzdDepreciation(int qzdDepreciation) {
+    public void setQzdDepreciation(float qzdDepreciation) {
         this.qzdDepreciation = qzdDepreciation;
     }
 
-    public int getRxDepreciation() {
+    public float getRxDepreciation() {
         return rxDepreciation;
     }
 
-    public void setRxDepreciation(int rxDepreciation) {
+    public void setRxDepreciation(float rxDepreciation) {
         this.rxDepreciation = rxDepreciation;
     }
 
@@ -193,6 +189,22 @@ public class ErpConfig {
 
     public void setAdministration(int administration) {
         this.administration = administration;
+    }
+
+    public int getFactoryRent() {
+        return factoryRent;
+    }
+
+    public void setFactoryRent(int factoryRent) {
+        this.factoryRent = factoryRent;
+    }
+
+    public String[] getGroupNames() {
+        return groupNames;
+    }
+
+    public void setGroupNames(String[] groupName) {
+        this.groupNames = groupName;
     }
 
     @Override

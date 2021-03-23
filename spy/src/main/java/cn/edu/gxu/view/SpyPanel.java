@@ -40,7 +40,7 @@ public class SpyPanel extends JPanel {
     JButton spyButton = new JButton("添加间牒结果");
 
     Font font = new Font("黑体", Font.PLAIN, 15);
-//    private JTable table;
+    //    private JTable table;
     private static MainFrame mainFrame;
     private static String year;
 
@@ -52,7 +52,7 @@ public class SpyPanel extends JPanel {
         this.setLayout(null);
 
         {//年末经营结果
-            scoreTf.setBounds(50, 0, 200, 80);
+            scoreTf.setBounds(50, 0, 220, 80);
             // 给文本框加上鼠标单击事件监听
             scoreTf.addMouseListener(new MouseAdapter() {
                 @Override
@@ -61,7 +61,7 @@ public class SpyPanel extends JPanel {
                     scoreTf.setText("");
                 }
             });
-            scoreButton.setBounds(80, 90, 150, 20);
+            scoreButton.setBounds(80, 80, 150, 30);
             scoreButton.setFont(font);
             // 给按钮加上监听
             scoreButton.addActionListener(e -> {
@@ -80,7 +80,7 @@ public class SpyPanel extends JPanel {
                     spyTf.setText("");
                 }
             });
-            spyButton.setBounds(400, 90, 150, 20);
+            spyButton.setBounds(400, 80, 150, 30);
             spyButton.setFont(font);
             // 给按钮加上监听
             spyButton.addActionListener(e -> {
@@ -134,7 +134,7 @@ public class SpyPanel extends JPanel {
             data[i][1] = score.getGroupProfit();
             data[i][2] = score.getGroupRights();
             data[i][3] = String.format("%.2f", (score.getGroupScore() / (float) score.getGroupRights()));
-            data[i][vName.length - 1] = i;
+            data[i][vName.length - 1] = i + 1;//排名
         }
     }
 
@@ -172,9 +172,9 @@ public class SpyPanel extends JPanel {
         data[i][4] = spyPo.getCash();
         int loan = spyPo.getLongtermLoan() + spyPo.getShorttemLoan();
         data[i][5] = loan;
-        data[i][6] = spyPo.getProduct().show();
-        data[i][7] = spyPo.getCertificate().showMarket();
-        data[i][8] = spyPo.getProdLine().show();
+        data[i][6] = spyPo.getProduct() == null ? "-" : spyPo.getProduct().show();
+        data[i][7] = spyPo.getCertificate() == null ? "-" : spyPo.getCertificate().showMarket();
+        data[i][8] = spyPo.getProdLine() == null ? "-" : spyPo.getProdLine().show();
     }
 
     private void loadTable(Object[][] data) {

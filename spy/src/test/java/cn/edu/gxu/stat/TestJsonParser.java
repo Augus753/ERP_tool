@@ -1,6 +1,12 @@
 package cn.edu.gxu.stat;
 
+import cn.edu.gxu.config.MainConfig;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * @author atom.hu
@@ -23,11 +29,13 @@ public class TestJsonParser {
         new JsonParser().parseScore(text).stream().forEach(System.out::println);
     }
 
-//    @Test
-//    public void test_parseSpy() {
-//        String text = "{\"hasbuy\":0,\"code\":0,\"msg\":\"\",\"busInfos\":[{\"groupRunYear\":2,\"prodLine\":\"X4_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1,X1_4_P1\",\"groupName\":\"第19组\",\"payable\":0,\"shorttemLoan\":100,\"receivable\":100,\"groupRunMonth\":12,\"longtermLoan\":2140,\"groupRunDay\":30,\"buyInfoMonth\":-1,\"material\":\"R1_0,R3_0,R4_0\",\"buyInfoDay\":-1,\"product\":\"P1_0,P3_3\",\"groupId\":\"298\",\"certificate\":\"S1_1,S2_1,S3_3,S4_3,S5_3,ZS1_3,ZS2_3,P1_1,P2_1,P3_1,P4_2,P5_2\",\"buyInfoYear\":-1,\"cash\":-155.35,\"worker\":\"GR1_50,GR2_50,GR3_30\",\"factory\":\"CF1_3,CF2_3,CF3_3,CF4_3\"}]}";
-//        System.out.println(new JsonParser().parseSpy(text));
-//    }
+    @Test
+    public void test_parseSpy() {
+        String text = "{\"hasbuy\":0,\"code\":0,\"msg\":\"\",\"busInfos\":[{\"groupRunYear\":1,\"prodLine\":\"\",\"groupName\":\"第15组\",\"payable\":0,\"shorttemLoan\":0,\"receivable\":0,\"groupRunMonth\":12,\"longtermLoan\":0,\"groupRunDay\":30,\"buyInfoMonth\":-1,\"material\":\"\",\"buyInfoDay\":-1,\"product\":\"\",\"groupId\":\"656\",\"certificate\":\"S1_1,S2_1,S3_3,S4_3,S5_3,ZS1_3,ZS2_3,P1_1,P2_2,P3_3,P4_3,P5_3\",\"buyInfoYear\":-1,\"cash\":399.2,\"worker\":\"GR1_50,GR2_50,GR3_30\",\"factory\":\"CF1_3,CF2_1,CF3_1,CF4_1\"}]}\n";
+//        String text="{\"hasbuy\":0,\"code\":0,\"msg\":\"\",\"busInfos\":[{\"groupRunYear\":2,\"prodLine\":\"X4_4_P1,X4_4_P1,X4_4_P1,X4_4_P1,X4_4_P3,X4_4_P3,X4_4_P3,X4_4_P3,X4_4_P2,X4_4_P2,X4_4_P2,X4_4_P2\",\"groupName\":\"第1组\",\"payable\":0,\"shorttemLoan\":10,\"receivable\":456,\"groupRunMonth\":12,\"longtermLoan\":2680,\"groupRunDay\":30,\"buyInfoMonth\":-1,\"material\":\"R1_0,R2_0,R3_0,R4_0\",\"buyInfoDay\":-1,\"product\":\"P1_0,P2_4,P3_0\",\"groupId\":\"642\",\"certificate\":\"S1_1,S2_1,S3_1,S4_3,S5_3,ZS1_1,ZS2_3,P1_1,P2_1,P3_1,P4_2,P5_3\",\"buyInfoYear\":-1,\"cash\":836.16,\"worker\":\"GR1_50,GR2_50,GR3_30\",\"factory\":\"CF1_3,CF2_3,CF3_3,CF4_1\"}]}\n";
+        System.out.println(new JsonParser().parseSpy(text));
+        System.out.println(new JsonParser().parseSpy(text).certificate.domesticMarket);
+    }
 
     @Test
     public void test_parseOrder() {
@@ -35,5 +43,22 @@ public class TestJsonParser {
         System.out.println(new JsonParser().parseOrder(text));
     }
 
+    public static void main(String[] args) {
+
+//        }//        int idx = Collections.sear(Arrays.asList(MainConfig.RUN_YEAR.clone()), "第二年");
+//        System.out.println(idx);
+        String[][] groupData = new String[][]{
+                {"1", "2"},
+                {"3", "4"},
+//                {"5", "6"},
+        };
+
+
+        String[] result = Stream.of(groupData)
+                .flatMap((Function<String[], Stream<?>>) strings -> Arrays.stream(strings.clone()))
+                .distinct()
+                .toArray(String[]::new);
+        System.out.println(Arrays.toString(result));
+    }
 
 }

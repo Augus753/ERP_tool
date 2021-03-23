@@ -1,5 +1,8 @@
 package cn.edu.gxu.constant;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+
 /**
  * @author atom.hu
  * @version V1.0
@@ -47,9 +50,9 @@ public class enums {
     }
 
     public enum ProdLine {
-        X1("X1", "手工线"),//手工线
-        X3("X3", "全自动"),//全自动
-        X4("X4", "柔线");//柔线
+        SGX_X1("X1", "手工线"),//手工线
+        QZD_X3("X3", "全自动"),//全自动
+        RX_X4("X4", "柔线");//柔线
         public String line;
         public String name;
 
@@ -63,7 +66,7 @@ public class enums {
                 if (prodLine.line.equals(line))
                     return prodLine;
             }
-            return X3;
+            return QZD_X3;
         }
     }
 
@@ -79,11 +82,11 @@ public class enums {
 
 
     public enum Market {
-        LOCAL_MARKET("S1", "本地"),
-        REGIONAL_MARKET("S2", "区域"),
-        DOMESTIC_MARKET("S3", "国内"),
-        ASIA_MARKET("S4", "亚洲"),
-        GLOBAL_MARKET("S5", "国际");
+        LOCAL_MARKET_1("S1", "本地"),
+        REGIONAL_MARKET_2("S2", "区域"),
+        DOMESTIC_MARKET_3("S3", "国内"),
+        ASIA_MARKET_4("S4", "亚洲"),
+        GLOBAL_MARKET_5("S5", "国际");
 
         public String sSysId;
         public String marketName;
@@ -99,15 +102,15 @@ public class enums {
                     return m;
                 }
             }
-            return LOCAL_MARKET;
+            return LOCAL_MARKET_1;
         }
 
     }
 
     public enum LineStatus {
-        BUILD(1, "在建"),
-        DISCONTINUED(2, "停产"),
-        ONLINE(4, "在产");
+        BUILD_1(1, "在建"),
+        DISCONTINUED_2(2, "停产"),
+        ONLINE_4(4, "在产");
 
         public Integer status;
         public String remark;
@@ -123,14 +126,14 @@ public class enums {
                     return lineStatus;
                 }
             }
-            return ONLINE;
+            return ONLINE_4;
         }
     }
 
     public enum FactoryStatus {
-        NOT_OWNED(1, "未拥有"),
-        BUY(2, "购买"),
-        RENT(3, "租用");
+        NOT_OWNED_1(1, "未拥有"),
+        BUY_2(2, "购买"),
+        RENT_3(3, "租用");
 
         public int status;
         public String remark;
@@ -159,10 +162,9 @@ public class enums {
     }
 
     public enum CertificateStatus {
-        YEAR_1(1, "已完成"),
-        YEAR_2(2, "研发中"),
-        YEAR_3(3, "未开发");
-
+        COMPLETE_1(1, "已完成"),
+        RESEARCH_2(2, "研发中"),
+        UN_RESEARCH_3(3, "未开发");
         public Integer status;
         public String remark;
 
@@ -179,6 +181,7 @@ public class enums {
             }
             return null;
         }
+
     }
 
     public enum SpyType {
