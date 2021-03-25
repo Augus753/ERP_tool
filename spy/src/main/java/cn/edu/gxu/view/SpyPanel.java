@@ -8,7 +8,7 @@ package cn.edu.gxu.view;
  * @Description 间谍
  */
 
-import cn.edu.gxu.constant.Constant;
+import cn.edu.gxu.collect.CollectManager;
 import cn.edu.gxu.persist.CacheManager;
 import cn.edu.gxu.pojo.GroupScoresPo;
 import cn.edu.gxu.pojo.SpyPo;
@@ -22,6 +22,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SpyPanel extends JPanel {
 
@@ -29,7 +30,9 @@ public class SpyPanel extends JPanel {
      *
      */
     private static final long serialVersionUID = 1L;
-    private Object[][] data = new Object[Constant.MAX_SCORE_NUM][10];
+
+    private Object[][] data;
+//    private Object[][] data = new Object[Constant.MAX_SCORE_NUM][10];
 
     private Object[] vName = {"组名", "利润", "权益", "OID", "现金", "贷款", "库存", "市场", "生产线", "排名"};
 
@@ -48,7 +51,7 @@ public class SpyPanel extends JPanel {
         SpyPanel.mainFrame = mainFrame;
         SpyPanel.year = year;
 
-        this.setBounds(0, 0, 1200, 610);
+        this.setBounds(0, 0, 1200, 700);
         this.setLayout(null);
 
         {//年末经营结果
@@ -71,7 +74,7 @@ public class SpyPanel extends JPanel {
         }
 
         {//间谍
-            spyTf.setBounds(320, 0, 350, 80);
+            spyTf.setBounds(420, 0, 350, 80);
             // 给文本框加上鼠标单击事件监听
             spyTf.addMouseListener(new MouseAdapter() {
                 @Override
@@ -80,7 +83,7 @@ public class SpyPanel extends JPanel {
                     spyTf.setText("");
                 }
             });
-            spyButton.setBounds(400, 80, 150, 30);
+            spyButton.setBounds(520, 80, 150, 30);
             spyButton.setFont(font);
             // 给按钮加上监听
             spyButton.addActionListener(e -> {
@@ -103,11 +106,14 @@ public class SpyPanel extends JPanel {
         try {
             scores = new JsonParser().parseScore(text);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "请重新输入经营结果数据", "输入错误",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
+//        年
+        CollectManager.record(year + "_经营结果", text);
+
         CacheManager.setScore(year, scores);
 
         System.out.println("输入框：" + text);
@@ -128,14 +134,25 @@ public class SpyPanel extends JPanel {
     }
 
     private void loadScore(List<GroupScoresPo> scores) {
-        for (int i = 0; i < scores.size(); i++) {
-            GroupScoresPo score = scores.get(i);
-            data[i][0] = score.getGroupName();
-            data[i][1] = score.getGroupProfit();
-            data[i][2] = score.getGroupRights();
-            data[i][3] = String.format("%.2f", (score.getGroupScore() / (float) score.getGroupRights()));
-            data[i][vName.length - 1] = i + 1;//排名
-        }
+//        data = new Object[scores.size()][vName.length];
+        AtomicInteger i = new AtomicInteger();
+        data = scores.stream().map(score -> {
+            Object[] raw = new Object[vName.length];
+            raw[0] = score.getGroupName();
+            raw[1] = score.getGroupProfit();
+            raw[2] = score.getGroupRights();
+            raw[3] = String.format("%.2f", (score.getGroupScore() / (float) score.getGroupRights()));
+            raw[vName.length - 1] = i.incrementAndGet();//排名
+            return raw;
+        }).toArray(Object[][]::new);
+//        for (int i = 0; i < scores.size(); i++) {
+//            GroupScoresPo score = scores.get(i);
+//            data[i][0] = score.getGroupName();
+//            data[i][1] = score.getGroupProfit();
+//            data[i][2] = score.getGroupRights();
+//            data[i][3] = String.format("%.2f", (score.getGroupScore() / (float) score.getGroupRights()));
+//            data[i][vName.length - 1] = i + 1;//排名
+//        }
     }
 
     private void showSpyData(String text) {
@@ -150,11 +167,13 @@ public class SpyPanel extends JPanel {
         try {
             spyPo = new JsonParser().parseSpy(text);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "请重新输入间谍结果数据", "输入错误",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
+        CollectManager.record(year + "_" + spyPo.getGroupName() + "_间谍", text);
+
         CacheManager.setSpy(CacheManager.generateGroupKey(year, spyPo.getGroupName()), spyPo);
         loadSpy(spyPo.getGroupName());
         loadTable(data);
@@ -190,7 +209,7 @@ public class SpyPanel extends JPanel {
 //        table.setFont(new Font("Menu.font", Font.PLAIN, 14));
 
         JScrollPane jp = new JScrollPane(table);
-        jp.setBounds(0, 120, 1100, 510);
+        jp.setBounds(0, 120, 1100, 580);
         add(jp);
 //        table.setSelectionBackground(new Color(0));
         table.addMouseListener(new MouseAdapter() {

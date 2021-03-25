@@ -49,7 +49,7 @@ public class MainFrame extends JFrame implements ActionListener {
         //初始菜单栏
         addMenu();
 
-        this.setSize(1200, 700);
+        this.setSize(1200, 750);
         this.setBackground(Color.white);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -82,8 +82,8 @@ public class MainFrame extends JFrame implements ActionListener {
                 JFileChooser chooser = new JFileChooser();
                 if (chooser.showOpenDialog(openFileItem) == JFileChooser.APPROVE_OPTION) {//
                     File file = chooser.getSelectedFile();
-//                    textArea.setText(file.getName() + ":" + file.getPath() + "\n" + file.length());
                     try {
+                        if (!file.exists()) file.createNewFile();
                         CacheManager.reload(file);
                         JOptionPane.showMessageDialog(this, "加载完成");
                     } catch (Exception exception) {
@@ -130,9 +130,6 @@ public class MainFrame extends JFrame implements ActionListener {
             configMenuItem = new JMenuItem("参数配置");
             configMenuItem.setFont(menuFont);
             configMenuItem.addActionListener(this);
-//            configMenuItem.addActionListener(e -> {
-//                CacheManager.clear();
-//            });
             fileMenu.add(configMenuItem);
         }
 
@@ -204,7 +201,7 @@ public class MainFrame extends JFrame implements ActionListener {
         this.setJMenuBar(menubar);
 
         this.getContentPane().setLayout(null);
-        contentPanel.setBounds(0, 0, 1200, 680);
+        contentPanel.setBounds(0, 0, 1200, 750);
         contentPanel.setVisible(false);
         contentPanel.setLayout(null);
         getContentPane().add(contentPanel);

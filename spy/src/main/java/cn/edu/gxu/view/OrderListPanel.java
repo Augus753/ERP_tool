@@ -8,7 +8,7 @@ package cn.edu.gxu.view;
  * @Description 间谍
  */
 
-import cn.edu.gxu.config.MainConfig;
+import cn.edu.gxu.collect.CollectManager;
 import cn.edu.gxu.constant.Constant;
 import cn.edu.gxu.constant.enums;
 import cn.edu.gxu.persist.CacheManager;
@@ -66,7 +66,9 @@ public class OrderListPanel extends JPanel {
 
     public OrderListPanel(String year) {
         OrderListPanel.year = year;
-        this.setBounds(0, 0, 900, 610);
+//        this.setBounds(0, 0, 1200, 700);
+
+        this.setBounds(0, 0, 900, 700);
         this.setLayout(null);
         {//添加订单
             orderTf.setBounds(200, 0, 300, 50);
@@ -524,6 +526,9 @@ public class OrderListPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
+//        年
+        CollectManager.record(year + "_订单", text);
+
         CacheManager.setOrder(year, orderPos);
         loadOrderList();
         loadTable(data, vName);
@@ -563,7 +568,7 @@ public class OrderListPanel extends JPanel {
         TableModel table = new TableModel(data, vName);
 
         JScrollPane jp = new JScrollPane(table);
-        jp.setBounds(100, 100, 800, 610);
+        jp.setBounds(100, 100, 800, 600);
         if (faceTable != null) {
             this.remove(faceTable);
             if (vName == this.vName) {

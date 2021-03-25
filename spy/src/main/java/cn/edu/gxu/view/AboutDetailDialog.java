@@ -19,7 +19,7 @@ public class AboutDetailDialog extends JDialog {
 
         JPanel p = new JPanel(new BorderLayout());
         String disText = "<html><HTML><body style=color:red>" +
-                "<br> 版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：v0.1" +
+                "<br> 版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：v0.2.0" +
                 "<br>制&nbsp;&nbsp;作&nbsp;&nbsp;人：第九空间 " +
                 "<br> 时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间：2021年3月 " +
                 "<br> 联系方式：Augus753@outlook.com" +

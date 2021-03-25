@@ -8,6 +8,7 @@ package cn.edu.gxu.view;
  * @Description
  */
 
+import cn.edu.gxu.collect.CollectManager;
 import cn.edu.gxu.constant.Constant;
 import cn.edu.gxu.constant.enums;
 import cn.edu.gxu.persist.CacheManager;
@@ -45,7 +46,7 @@ public class AdvertPanel extends JPanel {
 
     public AdvertPanel(String year) {
         AdvertPanel.year = year;
-        this.setBounds(100, 0, 900, 600);
+        this.setBounds(100, 0, 900, 700);
 
         this.setLayout(null);
 
@@ -97,25 +98,28 @@ public class AdvertPanel extends JPanel {
     private void showData(String text) {
 
         //文本框输入
-        String value = Objects.requireNonNull(cmb.getSelectedItem()).toString();
+        String market = Objects.requireNonNull(cmb.getSelectedItem()).toString();
 //        System.out.println("下拉列表：" + value);
 //        System.out.println("输入框：" + text);
 
-        if ("--请选择--".equals(value)) {
+        if ("--请选择--".equals(market)) {
             JOptionPane.showMessageDialog(cmb, "请选择市场", "输入错误",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
             List<AdvertPo> ads = new JsonParser().parseAd(text);
-            String key = CacheManager.generateMarketKey(year, value);
+            String key = CacheManager.generateMarketKey(year, market);
             CacheManager.setAd(key, ads);
+
+//            年_市场
+            CollectManager.record(year + "_" + market + "_广告", text);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "请输入广告数据", "输入错误",
                     JOptionPane.ERROR_MESSAGE);
         }
 
-        loadAd(value);
+        loadAd(market);
         loadTable(data);
     }
 
@@ -163,7 +167,7 @@ public class AdvertPanel extends JPanel {
         }
 
         JScrollPane jp = new JScrollPane(table);
-        jp.setBounds(0, 70, 800, 600);
+        jp.setBounds(0, 70, 800, 630);
         add(jp);
     }
 }
