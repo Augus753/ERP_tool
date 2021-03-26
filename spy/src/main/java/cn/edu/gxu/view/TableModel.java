@@ -2,6 +2,7 @@ package cn.edu.gxu.view;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
@@ -29,6 +30,10 @@ public class TableModel extends JTable {
 
     }
 
+    public TableModel(DefaultTableModel newTableModel) {
+        super(newTableModel);
+    }
+
     /**
      * @Override
      */
@@ -54,6 +59,9 @@ public class TableModel extends JTable {
      * @Override
      */
     public boolean isCellEditable(int row, int column) {
+//        public boolean isCellEditable(int row, int column) {
+//            return column==0?true:false;
+//        }
         return editable;   //单元格不可修改
     }
 
@@ -64,4 +72,5 @@ public class TableModel extends JTable {
         editable = true;
         isCellEditable(0, 0);
     }
+
 }

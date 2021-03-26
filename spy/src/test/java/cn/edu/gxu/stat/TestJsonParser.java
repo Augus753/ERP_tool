@@ -3,6 +3,11 @@ package cn.edu.gxu.stat;
 import cn.edu.gxu.config.MainConfig;
 import org.junit.Test;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableModel;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.function.Function;
@@ -44,21 +49,39 @@ public class TestJsonParser {
     }
 
     public static void main(String[] args) {
+//创建表格的表头内容数组
+        String[] names = {"项目备案号", "管段编号", "管段属性", "管段类型"};
+//创建表格的内容数组，因为是多行多列所以是二维数组
+        String[][] obj = {{"", "", "", ""}};
+//初始化表格模板
+        TableModel tableModel = new DefaultTableModel(obj, names);
+//使用表格模板创建表格
+        JTable table = new JTable(tableModel);
+// 设置此表格视图的首选大小
+        table.setPreferredSize(new Dimension(650, 30));
+//设置表格行高
+        table.setRowHeight(20);
 
-//        }//        int idx = Collections.sear(Arrays.asList(MainConfig.RUN_YEAR.clone()), "第二年");
-//        System.out.println(idx);
-        String[][] groupData = new String[][]{
-                {"1", "2"},
-                {"3", "4"},
-//                {"5", "6"},
-        };
+//声明下拉框
+        JComboBox tubePurposeBox = new JComboBox();
+        tubePurposeBox.addItem("主干");
+        tubePurposeBox.addItem("引上");
+        tubePurposeBox.addItem("分支");
+        tubePurposeBox.addItem("沟通");
+        tubePurposeBox.addItem("预留");
+//声明单元格编辑器，传入下拉框
+        TableCellEditor tubePurposeCellEditor = new DefaultCellEditor(tubePurposeBox);
+//将下拉框单元格编辑器放入表格第二列中，以为只初始化了一行内容
+        table.getColumnModel().getColumn(2).setCellEditor(tubePurposeCellEditor);
+//声明一个面板用于存放表格
+        JPanel rightTopPanel = new JPanel(new BorderLayout());
+//设置表头
+        rightTopPanel.add(table.getTableHeader(), BorderLayout.NORTH);
+//设置表格内容
+        rightTopPanel.add(table, BorderLayout.SOUTH);
+//...
+//将该面板放入你自己的容器中显示就ok了
 
-
-        String[] result = Stream.of(groupData)
-                .flatMap((Function<String[], Stream<?>>) strings -> Arrays.stream(strings.clone()))
-                .distinct()
-                .toArray(String[]::new);
-        System.out.println(Arrays.toString(result));
     }
 
 }

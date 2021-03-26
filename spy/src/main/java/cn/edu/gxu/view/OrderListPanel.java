@@ -21,6 +21,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -39,7 +40,7 @@ public class OrderListPanel extends JPanel {
     private Object[][] data;
     private JScrollPane faceTable = null;
 
-    private String[] vName = {"市场", "单号", "组号", "产品", "数量", "单价", "应交货期", "账期"};
+    private String[] vName = {"市场", "单号", "组号", "产品", "数量", "单价", "应交货期", "账期", "违约"};
     private String[] vProfitName = {"组名", "销售额", "利润", "排名"};
     private String[] vShareName = {"组名", "本地", "区域", "国内", "亚洲", "国际"};
     private String[] vProductNumName = {"组名", "产品", "本地", "区域", "国内", "亚洲", "国际", "总数"};
@@ -328,6 +329,7 @@ public class OrderListPanel extends JPanel {
         Map<String, ProfitDao> numMap = new HashMap<>();//<市场_组名_产品,v>
         Map<String, ProfitDao> squenceMap = new HashMap<>();//<组名_产品,v>
         Map<String, ProfitDao> shareSequenceData = new HashMap<>();//记录顺序
+        System.out.println("违约情况：" + data[0][8]);
         for (Object[] row : data) {
             //市场_组名_产品
             String marketName = row[0] + "";
@@ -565,7 +567,23 @@ public class OrderListPanel extends JPanel {
 //        table.setFont(new Font("Menu.font", Font.PLAIN, 13));
 
 
-        TableModel table = new TableModel(data, vName);
+        JTable table = new TableModel(data, vName);
+        if (vName.length == this.vName.length) {
+            DefaultTableModel newTableModel = new DefaultTableModel(data, vName) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return column == 8;
+                }
+            };
+
+            table = new JTable(newTableModel);
+            String[] str2 = {"是", "否"};
+            table.getColumnModel().getColumn(8).setCellEditor(new DefaultCellEditor(new JComboBox(str2)));
+            table.setRowHeight(25);// 设置表格行高
+            table.setFont(new Font("Menu.font", Font.PLAIN, 15));
+            System.out.println("下拉框---------");
+        }
+
 
         JScrollPane jp = new JScrollPane(table);
         jp.setBounds(100, 100, 800, 600);
