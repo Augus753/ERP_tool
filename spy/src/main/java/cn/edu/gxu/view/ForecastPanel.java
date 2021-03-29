@@ -1,6 +1,7 @@
 package cn.edu.gxu.view;
 
-import cn.edu.gxu.config.MainConfig;
+import cn.edu.gxu.constant.Constant;
+import cn.edu.gxu.constant.Constant;
 import cn.edu.gxu.persist.CacheManager;
 import cn.edu.gxu.pojo.*;
 import cn.edu.gxu.stat.orderStat;
@@ -84,7 +85,7 @@ public class ForecastPanel extends JPanel {
                         + lines.getOrDefault(ProdLine.SGX_X1.name, 0) * CacheManager.getConfig().sgxDepreciation));
             }
 
-            finance.setInterest((int) (spyPo.getLongtermLoan() * MainConfig.longLoanRate + spyPo.getShorttemLoan() * MainConfig.shortLoanRate));
+            finance.setInterest((int) (spyPo.getLongtermLoan() * Constant.longLoanRate + spyPo.getShorttemLoan() * Constant.shortLoanRate));
             finance.setUpkeep(spyPo.getProdLine().getRx() * CacheManager.getConfig().rxUpKeep
                     + spyPo.getProdLine().getQzd() * CacheManager.getConfig().qzdUpKeep
                     + spyPo.getProdLine().getSgx() * CacheManager.getConfig().sgxUpKeep);
@@ -115,9 +116,9 @@ public class ForecastPanel extends JPanel {
     }
 
     private String getLastYear(String year) {
-        for (int i = 1; i < MainConfig.RUN_YEAR.length; i++) {
-            if (MainConfig.RUN_YEAR[i].equals(year))
-                return MainConfig.RUN_YEAR[i - 1];
+        for (int i = 1; i < Constant.RUN_YEAR.length; i++) {
+            if (Constant.RUN_YEAR[i].equals(year))
+                return Constant.RUN_YEAR[i - 1];
         }
         return null;
     }

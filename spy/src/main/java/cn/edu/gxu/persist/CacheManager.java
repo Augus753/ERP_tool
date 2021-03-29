@@ -22,6 +22,8 @@ public class CacheManager {
     private static final String DATA_PATH = "./data.json";
     private static final String DEFAULT_CHARSET = "utf-8";
     private static CacheManager instance = new CacheManager();
+
+
     //    单例
     private static CacheMoodle cache = new CacheMoodle();
 

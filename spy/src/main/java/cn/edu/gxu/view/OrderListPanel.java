@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static cn.edu.gxu.config.MainConfig.MONTH_NAME;
-
 public class OrderListPanel extends JPanel {
 
     /**
@@ -56,6 +54,9 @@ public class OrderListPanel extends JPanel {
     JButton marketShareButton = new JButton("市场份额");
     JButton productNumButton = new JButton("产品数量");
     JButton deliveryMonthNumButton = new JButton("交货期数量");
+
+    JButton collectButton = new JButton("一键获取订单");
+
 
     Font cmbFont = new Font("黑体", Font.BOLD, 14);
     Font font = new Font("黑体", Font.PLAIN, 13);
@@ -90,6 +91,18 @@ public class OrderListPanel extends JPanel {
             });
             drawOrderListOptionCmb();
             drawOrderNumOptionCmb();
+
+            collectButton.setBounds(700, 20, 150, 50);
+            collectButton.setFont(font);
+            collectButton.addActionListener(e -> {
+                try {
+                    collectAndShow();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "自动获取订单信息失败", "自动获取数据失败",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            });
         }
         {
             //订单列表
@@ -143,11 +156,20 @@ public class OrderListPanel extends JPanel {
 
         this.add(orderTf);
         this.add(orderButton);
+        this.add(collectButton);
         this.add(orderListButton);
         this.add(profitButton);
         this.add(marketShareButton);
         this.add(productNumButton);
         this.setVisible(true);
+    }
+
+    private void collectAndShow() throws Exception {
+        CollectManager.getInstance().login();
+        String orderText = CollectManager.getInstance().getOrderInfo();
+        if (orderText != null && orderText.length() > 0) {
+            addOrder(orderText);
+        }
     }
 
     private void showDeliveryMonthNum(enums.Product[] values) {
@@ -240,7 +262,7 @@ public class OrderListPanel extends JPanel {
             //交货期下拉框
             JComboBox cmb = new JComboBox();    //创建JComboBox
             cmb.addItem(defaultMonthCmd);    //向下拉列表中添加一项
-            for (String g : MONTH_NAME) {
+            for (String g : Constant.MONTH_NAME) {
                 cmb.addItem(g);
             }
             cmb.setBounds(30, 0, 100, 10);
@@ -516,7 +538,6 @@ public class OrderListPanel extends JPanel {
     }
 
     private void addOrder(String text) {
-
         //文本框输入
         System.out.println("输入框：" + text);
 
@@ -529,7 +550,7 @@ public class OrderListPanel extends JPanel {
             return;
         }
 //        年
-        CollectManager.record(year + "_订单", text);
+        CollectManager.getInstance().record(year + "_订单", text);
 
         CacheManager.setOrder(year, orderPos);
         loadOrderList();

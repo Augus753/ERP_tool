@@ -1,6 +1,6 @@
 package cn.edu.gxu.persist;
 
-import cn.edu.gxu.config.MainConfig;
+import cn.edu.gxu.constant.Constant;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -45,7 +45,10 @@ public class ErpConfig {
     //厂房租金
     public int factoryRent = 60;
 
-    public String[] groupNames = MainConfig.GROUP_NAME;
+    private String loginInfo = "";
+    private String userName;
+    private String passWord;
+    public String[] groupNames = Constant.GROUP_NAME;
 
     public float getShortTemLoanRate() {
         return shortTemLoanRate;
@@ -205,6 +208,30 @@ public class ErpConfig {
 
     public void setGroupNames(String[] groupName) {
         this.groupNames = groupName;
+    }
+
+    public String getLoginInfo() {
+        return loginInfo;
+    }
+
+    public void setLoginInfo(String loginInfo) {
+        this.loginInfo = loginInfo;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassWord() {
+        return passWord;
+    }
+
+    public void setPassWord(String passWord) {
+        this.passWord = passWord;
     }
 
     @Override

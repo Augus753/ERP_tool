@@ -9,11 +9,13 @@ package cn.edu.gxu.view;
  */
 
 import cn.edu.gxu.collect.CollectManager;
+import cn.edu.gxu.constant.ResponseException;
 import cn.edu.gxu.persist.CacheManager;
 import cn.edu.gxu.pojo.GroupScoresPo;
 import cn.edu.gxu.pojo.SpyPo;
 import cn.edu.gxu.stat.JsonParser;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import javax.swing.*;
@@ -26,19 +28,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SpyPanel extends JPanel {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-
     private Object[][] data;
-//    private Object[][] data = new Object[Constant.MAX_SCORE_NUM][10];
-
-    private Object[] vName = {"组名", "利润", "权益", "OID", "现金", "贷款", "库存", "市场", "生产线", "排名"};
+    private final Object[] vName = {"组名", "利润", "权益", "OID", "现金", "贷款", "库存", "市场", "生产线", "排名"};
 
     JTextField scoreTf = new JTextField("请输入年末排名json报文");
     JTextField spyTf = new JTextField("请输入间谍结果json报文");
 
+    JButton collectButton = new JButton("获取间谍数据");
     JButton scoreButton = new JButton("添加经营结果");
     JButton spyButton = new JButton("添加间牒结果");
 
@@ -88,17 +84,43 @@ public class SpyPanel extends JPanel {
             // 给按钮加上监听
             spyButton.addActionListener(e -> {
                 String s = spyTf.getText().trim();
-                showSpyData(s);
+                showSpyData(s, true);
             });
         }
-
+        collectButton.setBounds(800, 20, 150, 50);
+        collectButton.setFont(font);
+        // 给按钮加上监听
+        collectButton.addActionListener(e -> {
+            try {
+                collectData();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                exception.printStackTrace();
+                JOptionPane.showMessageDialog(this, "自动获取间谍信息失败", "自动获取数据失败",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
         reloadData();
 
         this.add(scoreTf);
         this.add(spyTf);
         this.add(scoreButton);
         this.add(spyButton);
+        this.add(collectButton);
         this.setVisible(true);
+    }
+
+    private void collectData() throws Exception {
+        CollectManager.getInstance().login();
+        String score = CollectManager.getInstance().getGroupScores(year);
+        showScoreData(score);
+        List<String> groupInfos = CollectManager.getInstance().getGroupInfo();
+        for (String groupInfo : groupInfos) {
+            System.out.println(groupInfo);
+            if (StringUtils.isNotEmpty(groupInfo))
+                showSpyData(groupInfo, false);
+        }
+        loadTable(data);
     }
 
     private void showScoreData(String text) {
@@ -112,7 +134,7 @@ public class SpyPanel extends JPanel {
             return;
         }
 //        年
-        CollectManager.record(year + "_经营结果", text);
+        CollectManager.getInstance().record(year + "_经营结果", text);
 
         CacheManager.setScore(year, scores);
 
@@ -155,7 +177,7 @@ public class SpyPanel extends JPanel {
 //        }
     }
 
-    private void showSpyData(String text) {
+    private void showSpyData(String text, boolean load) {
         if (Objects.isNull(data[0][0])) {
             JOptionPane.showMessageDialog(null, "请先输入经营结果数据", "输入错误",
                     JOptionPane.ERROR_MESSAGE);
@@ -172,11 +194,12 @@ public class SpyPanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        CollectManager.record(year + "_" + spyPo.getGroupName() + "_间谍", text);
+        CollectManager.getInstance().record(year + "_" + spyPo.getGroupName() + "_间谍", text);
 
         CacheManager.setSpy(CacheManager.generateGroupKey(year, spyPo.getGroupName()), spyPo);
         loadSpy(spyPo.getGroupName());
-        loadTable(data);
+        if (load)
+            loadTable(data);
     }
 
     private void loadSpy(String groupName) {

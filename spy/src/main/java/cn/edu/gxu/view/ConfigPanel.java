@@ -8,6 +8,8 @@ package cn.edu.gxu.view;
  * @Description
  */
 
+import cn.edu.gxu.collect.CollectManager;
+import cn.edu.gxu.constant.ResponseException;
 import cn.edu.gxu.persist.CacheManager;
 
 import javax.swing.*;
@@ -32,6 +34,10 @@ public class ConfigPanel extends JPanel {
     private static String[] groupName = {"参赛组名", "参赛组名"};
     private String[][] groupData = new String[15][groupName.length];
 
+    private static String[] loginName = {"名称", "值"};
+    private String[][] loginData = new String[3][groupName.length];
+
+
     Font font = new Font("黑体", Font.PLAIN, 15);
 
     public ConfigPanel() {
@@ -40,9 +46,28 @@ public class ConfigPanel extends JPanel {
         this.setBounds(100, 0, 900, 600);
         this.setLayout(null);
         showTable();
+//        jp5.setBounds(20, 400, 300, 140);
+
+        JButton loginButton = new JButton("登录测试");
+        loginButton.setBounds(100, 530, 120, 40);
+        loginButton.setFont(font);
+        loginButton.addActionListener(e -> {
+            try {
+                CacheManager.getConfig().setLoginInfo(loginData[0][1]);
+                CacheManager.getConfig().setUserName(loginData[1][1]);
+                CacheManager.getConfig().setPassWord(loginData[2][1]);
+                CollectManager.getInstance().login();
+            } catch (ResponseException exception) {
+                JOptionPane.showMessageDialog(this, exception.getErrMsg(), "登录失败",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            JOptionPane.showMessageDialog(this, "登录成功", "登录成功",
+                    JOptionPane.PLAIN_MESSAGE);
+        });
 
         JButton button = new JButton("修改");
-        button.setBounds(300, 400, 100, 80);
+        button.setBounds(600, 500, 100, 80);
         button.setFont(font);
 
         button.addActionListener(e -> {
@@ -59,6 +84,8 @@ public class ConfigPanel extends JPanel {
                     JOptionPane.PLAIN_MESSAGE);
         });
 
+
+        this.add(loginButton);
         this.add(button);
         this.setVisible(true);
     }
@@ -91,6 +118,10 @@ public class ConfigPanel extends JPanel {
                         .flatMap((Function<String[], Stream<?>>) strings -> Arrays.stream(strings.clone()))
                         .distinct()
                         .toArray(String[]::new));
+
+        CacheManager.getConfig().setLoginInfo(loginData[0][1]);
+        CacheManager.getConfig().setUserName(loginData[1][1]);
+        CacheManager.getConfig().setPassWord(loginData[2][1]);
     }
 
     private void loadConfig() {
@@ -123,6 +154,13 @@ public class ConfigPanel extends JPanel {
                 groupData[i / 2][1] = CacheManager.getConfig().getGroupNames()[i + 1];
             }
         }
+
+        loginData[0][0] = "地址";
+        loginData[1][0] = "账号";
+        loginData[2][0] = "密码";
+        loginData[0][1] = CacheManager.getConfig().getLoginInfo();
+        loginData[1][1] = CacheManager.getConfig().getUserName();
+        loginData[2][1] = CacheManager.getConfig().getPassWord();
     }
 
     private void showTable() {
@@ -147,12 +185,21 @@ public class ConfigPanel extends JPanel {
         jp3.setBounds(20, 300, 500, 80);
         add(jp3);
 
+        TableModel loginTable = new TableModel(loginData, loginName);
+        loginTable.setEditable();
+        loginTable.setRowHeight(25);
+        JScrollPane jp5 = new JScrollPane(loginTable);
+        jp5.setBounds(20, 400, 300, 120);
+        add(jp5);
+
         TableModel groupTable = new TableModel(groupData, groupName);
         groupTable.setEditable();
         groupTable.setRowHeight(25);
         JScrollPane jp4 = new JScrollPane(groupTable);
         jp4.setBounds(550, 20, 200, 410);
         add(jp4);
+
+
     }
 
 

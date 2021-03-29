@@ -1,6 +1,6 @@
 package cn.edu.gxu.pojo;
 
-import cn.edu.gxu.config.MainConfig;
+import cn.edu.gxu.constant.Constant;
 import cn.edu.gxu.persist.CacheManager;
 import com.alibaba.fastjson.JSONObject;
 
@@ -114,7 +114,7 @@ public class ForecastPo {
 
     public void calForecastRights() {
 //        年末权益：去年权益+税后毛利-财务费用
-        this.forecastRights = (int) (lastYearRights + profit * (1 - MainConfig.DefaultTax) - finance.sumRight()) - 100;
+        this.forecastRights = (int) (lastYearRights + profit * (1 - Constant.DefaultTax) - finance.sumRight()) - 100;
     }
 
     public void calRemainMaxCash() {

@@ -1,18 +1,15 @@
 package cn.edu.gxu.view;
 
-import cn.edu.gxu.config.MainConfig;
+import cn.edu.gxu.constant.Constant;
 import cn.edu.gxu.persist.CacheManager;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -30,7 +27,7 @@ public class MainFrame extends JFrame implements ActionListener {
     private JMenu fileMenu, adMenu, spyMenu, orderMenu, forecastMenu, helpMenu;
 
     JMenuItem openFileItem, item2, clearItem, configMenuItem;
-    ;
+
     private Map<String, JMenuItem> adMenuItem = new HashMap<>();
     private Map<String, JMenuItem> orderMenuItem = new HashMap<>();
     private Map<String, JMenuItem> spyMenuItem = new HashMap<>();
@@ -137,7 +134,7 @@ public class MainFrame extends JFrame implements ActionListener {
         adMenu = new JMenu("广告");
         adMenu.setFont(menuFont);
         {
-            for (String year : MainConfig.RUN_YEAR) {
+            for (String year : Constant.RUN_YEAR) {
                 JMenuItem ad = new JMenuItem(year);
                 ad.addActionListener(this);
                 ad.setFont(menuFont);
@@ -149,7 +146,7 @@ public class MainFrame extends JFrame implements ActionListener {
         spyMenu = new JMenu("年末间谍");
         spyMenu.setFont(menuFont);
         {
-            for (String year : MainConfig.RUN_YEAR) {
+            for (String year : Constant.RUN_YEAR) {
                 JMenuItem spyMenu = new JMenuItem(year);
                 spyMenu.addActionListener(this);
                 spyMenu.setFont(menuFont);
@@ -161,7 +158,7 @@ public class MainFrame extends JFrame implements ActionListener {
         orderMenu = new JMenu("订单分析");
         orderMenu.setFont(menuFont);
         {
-            for (String year : MainConfig.RUN_YEAR) {
+            for (String year : Constant.RUN_YEAR) {
                 JMenuItem orderItem = new JMenuItem(year);
                 orderItem.addActionListener(this);
                 orderItem.setFont(menuFont);
@@ -173,8 +170,8 @@ public class MainFrame extends JFrame implements ActionListener {
         forecastMenu = new JMenu("经营预测");
         forecastMenu.setFont(menuFont);
         {
-            for (int i = 1; i < MainConfig.RUN_YEAR.length; i++) {
-                String year = MainConfig.RUN_YEAR[i];
+            for (int i = 1; i < Constant.RUN_YEAR.length; i++) {
+                String year = Constant.RUN_YEAR[i];
                 JMenuItem forecastItem = new JMenuItem(year);
                 forecastItem.addActionListener(this);
                 forecastItem.setFont(menuFont);

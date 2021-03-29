@@ -7,10 +7,20 @@ package cn.edu.gxu.constant;
  * @date 2021/3/13 22:12
  * @Description
  */
-public class ResponseException {
+public class ResponseException extends Exception {
     public String errCode;
     public String errMsg;
     public Exception exception;
+
+    public ResponseException(String errCode, String errMsg) {
+        this.errCode = errCode;
+        this.errMsg = errMsg;
+    }
+
+    public ResponseException(enums.defineException exception) {
+        this.errCode = exception.errCode;
+        this.errMsg = exception.errMsg;
+    }
 
     public String getErrCode() {
         return errCode;

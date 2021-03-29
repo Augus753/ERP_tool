@@ -1,6 +1,5 @@
 package cn.edu.gxu.stat;
 
-import cn.edu.gxu.config.MainConfig;
 import org.junit.Test;
 
 import javax.swing.*;
