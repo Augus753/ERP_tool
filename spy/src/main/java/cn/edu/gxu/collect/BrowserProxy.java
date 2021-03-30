@@ -65,14 +65,14 @@ public class BrowserProxy {
      */
     private BrowserProxy() {
 //        "./lib//chromedriver.exe");
-        String webDriverPath = System.getProperty("user.dir") + "/lib/chromedriver.exe";
+        String webDriverPath = System.getProperty("user.dir") + "/res/chromedriver.exe";
         System.out.println("webDriverPath:" + webDriverPath);
         //String webDriverPath = "E:\\IDEA\\common\\src\\test\\java\\com\\autotest\\tools\\chromedriver.exe";
         System.setProperty("webdriver.chrome.driver", webDriverPath);
 
         ChromeOptions options = new ChromeOptions();
         //无界面启动
-//        options.addArguments("-headless");
+        options.addArguments("-headless");
 
         // 禁用阻止弹出窗口
         options.addArguments("--disable-popup-blocking");

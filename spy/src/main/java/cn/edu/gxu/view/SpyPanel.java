@@ -232,7 +232,7 @@ public class SpyPanel extends JPanel {
 //        table.setFont(new Font("Menu.font", Font.PLAIN, 14));
 
         JScrollPane jp = new JScrollPane(table);
-        jp.setBounds(0, 120, 1100, 580);
+        jp.setBounds(0, 120, 1100, 560);
         add(jp);
 //        table.setSelectionBackground(new Color(0));
         table.addMouseListener(new MouseAdapter() {

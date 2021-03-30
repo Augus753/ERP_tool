@@ -46,7 +46,7 @@ public class MainFrame extends JFrame implements ActionListener {
         //初始菜单栏
         addMenu();
 
-        this.setSize(1200, 750);
+        this.setSize(1200, 760);
         this.setBackground(Color.white);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -77,7 +77,7 @@ public class MainFrame extends JFrame implements ActionListener {
             openFileItem.setFont(menuFont);
             openFileItem.addActionListener(e -> {
                 JFileChooser chooser = new JFileChooser();
-                if (chooser.showOpenDialog(openFileItem) == JFileChooser.APPROVE_OPTION) {//
+                if (chooser.showOpenDialog(openFileItem) == JFileChooser.APPROVE_OPTION) {
                     File file = chooser.getSelectedFile();
                     try {
                         if (!file.exists()) file.createNewFile();

@@ -39,30 +39,30 @@
             <scope>compile</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.pcap4j/pcap4j-core -->
-        <dependency>
-            <groupId>org.pcap4j</groupId>
-            <artifactId>pcap4j-core</artifactId>
-            <version>1.8.2</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.pcap4j</groupId>-->
+<!--            <artifactId>pcap4j-core</artifactId>-->
+<!--            <version>1.8.2</version>-->
+<!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.pcap4j/pcap4j-packetfactory-static -->
-        <dependency>
-            <groupId>org.pcap4j</groupId>
-            <artifactId>pcap4j-packetfactory-static</artifactId>
-            <version>1.8.2</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.pcap4j</groupId>-->
+<!--            <artifactId>pcap4j-packetfactory-static</artifactId>-->
+<!--            <version>1.8.2</version>-->
+<!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.12</version>
-        </dependency>
 <!--        <dependency>-->
-<!--            <groupId>net.sourceforge.htmlunit</groupId>-->
-<!--            <artifactId>htmlunit</artifactId>-->
-<!--            <version>2.27</version>-->
+<!--            <groupId>org.apache.httpcomponents</groupId>-->
+<!--            <artifactId>httpclient</artifactId>-->
+<!--            <version>4.5.12</version>-->
 <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>net.sourceforge.htmlunit</groupId>-->
+        <!--            <artifactId>htmlunit</artifactId>-->
+        <!--            <version>2.27</version>-->
+        <!--        </dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
         <dependency>
@@ -98,6 +98,16 @@
                                     <mainClass>cn.edu.gxu.view.MainFrame</mainClass>
                                 </transformer>
                             </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>

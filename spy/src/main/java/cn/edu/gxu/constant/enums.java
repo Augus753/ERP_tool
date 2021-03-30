@@ -198,7 +198,8 @@ public class enums {
     public enum defineException {
 
         CONFIG_ACCOUNT_ERROR("0001", "未配置用户名密码"),
-        CONFIG_LOGIN_ERROR("0001", "登录失败，用户名密码");
+        CONFIG_LOGIN_ERROR("0001", "登录失败，用户名密码"),
+        LOGIN_ERROR("1001", "登录失败，请重启软件");
 
         public String errCode;
         public String errMsg;

@@ -1,6 +1,8 @@
 package cn.edu.gxu.collect;
 
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.io.IOException;
 
@@ -32,6 +34,13 @@ public class TestCollectManager {
 
     @Test
     public void test_HtmlUnitTest() throws IOException {
+        System.setProperty(
+                "webdriver.chrome.driver",
+                "F:\\ERP_tool\\res\\chromedriver.exe");
+        WebDriver webDriver = new ChromeDriver();
+        webDriver.get("https://www.baidu.com/");
+        System.out.println(webDriver.getTitle());
+
     }
 
 

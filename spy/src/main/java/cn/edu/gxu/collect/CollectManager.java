@@ -10,6 +10,7 @@ import net.lightbody.bmp.core.har.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -72,10 +73,16 @@ public class CollectManager {
 
 
     public void login() throws ResponseException {
-        driver.get("http://" + CacheManager.getConfig().getLoginInfo() + "/login");
-        if (StringUtils.isAllBlank(CacheManager.getConfig().getUserName(), CacheManager.getConfig().getPassWord())) {
+        if (StringUtils.isAllBlank(CacheManager.getConfig().getLoginInfo(), CacheManager.getConfig().getUserName(), CacheManager.getConfig().getPassWord())) {
             throw new ResponseException(enums.defineException.CONFIG_ACCOUNT_ERROR);
         }
+        try {
+            driver.get("http://" + CacheManager.getConfig().getLoginInfo() + "/login");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseException(enums.defineException.LOGIN_ERROR);
+        }
+
         try {
             // 输入账号 密码并登陆系统
             driver.findElement(By.id("userName")).sendKeys(CacheManager.getConfig().getUserName());
@@ -155,8 +162,11 @@ public class CollectManager {
         proxy.getHar().setLog(new HarLog());
         for (int i = 0; i < Constant.RUN_YEAR.length - 2; i++) {
             if (year.equals(Constant.RUN_YEAR[i])) {
-                System.out.println("查看" + Constant.RUN_YEAR[i] + "经营结果");
-                driver.findElement(By.xpath("//*[@id=\"scrollViewGameResult\"]/a[" + (i + 1) + "]")).click();
+                Thread.sleep(1000);
+                WebElement element = driver.findElement(By.xpath("//*[@id=\"scrollViewGameResult\"]/a[" + (i + 1) + "]"));
+//                JavascriptExecutor executor = (JavascriptExecutor) driver;
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+//                driver.findElement(By.xpath("//*[@id=\"scrollViewGameResult\"]/a[" + (i + 1) + "]")).click();
                 return collectLog(FILTER_KEY_SCORE);
             }
         }

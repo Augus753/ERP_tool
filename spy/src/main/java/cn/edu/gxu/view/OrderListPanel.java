@@ -607,7 +607,7 @@ public class OrderListPanel extends JPanel {
 
 
         JScrollPane jp = new JScrollPane(table);
-        jp.setBounds(100, 100, 800, 600);
+        jp.setBounds(100, 100, 800, 580);
         if (faceTable != null) {
             this.remove(faceTable);
             if (vName == this.vName) {
