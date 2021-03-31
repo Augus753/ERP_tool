@@ -274,7 +274,7 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new MainFrame("ERP工具箱").init();
+        new MainFrame("ERP对手分析").init();
         System.out.println("页面布局完成");
         CacheManager.reload();
         flushTimer();

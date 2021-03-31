@@ -27,10 +27,16 @@ public class orderStat {
             ProfitDao profit = result.getOrDefault(o.getOrderResult(), new ProfitDao());
             int num = NumberUtils.toInt(o.getMyOrderCount() + "");
             int price = NumberUtils.toInt(o.getpPerFee() + "");
+            //            违约取消订单不计入市场份额，不计利润，并扣除违约金
+            int totalPrice = price * num;
+            if (o.isBreach()) {
+                profit.setProfit((int) (profit.getProfit() - totalPrice * CacheManager.getConfig().getBreachRate()));
+            } else {
 //            profit.setSales(profit.getSales() + num * price);
-            profit.setProfit(profit.getProfit() + (price - Constant.getCost(o.getpSysId() + "")) * num);
+                profit.setProfit(profit.getProfit() + totalPrice - CacheManager.getConfig().getCost(o.getpSysId() + "") * num);
+                profit.setNum(profit.getNum() + o.getMyOrderCount());
+            }
             profit.setGroupName(o.getOrderResult());
-            profit.setNum(profit.getNum() + o.getMyOrderCount());
             result.put(o.getOrderResult(), profit);
         }
         return result;

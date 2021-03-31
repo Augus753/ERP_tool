@@ -77,7 +77,11 @@ public class CollectManager {
             throw new ResponseException(enums.defineException.CONFIG_ACCOUNT_ERROR);
         }
         try {
-            driver.get("http://" + CacheManager.getConfig().getLoginInfo() + "/login");
+            if (CacheManager.getConfig().getLoginInfo().startsWith("http")) {
+                driver.get(CacheManager.getConfig().getLoginInfo() + "/login");
+            } else {
+                driver.get("http://" + CacheManager.getConfig().getLoginInfo() + "/login");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseException(enums.defineException.LOGIN_ERROR);

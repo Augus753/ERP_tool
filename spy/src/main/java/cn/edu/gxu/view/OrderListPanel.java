@@ -21,6 +21,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -39,6 +40,7 @@ public class OrderListPanel extends JPanel {
     private JScrollPane faceTable = null;
 
     private String[] vName = {"市场", "单号", "组号", "产品", "数量", "单价", "应交货期", "账期", "违约"};
+    private static final boolean[] editableVName = new boolean[]{false, false, false, false, false, false, false, false, true};
     private String[] vProfitName = {"组名", "销售额", "利润", "排名"};
     private String[] vShareName = {"组名", "本地", "区域", "国内", "亚洲", "国际"};
     private String[] vProductNumName = {"组名", "产品", "本地", "区域", "国内", "亚洲", "国际", "总数"};
@@ -64,6 +66,7 @@ public class OrderListPanel extends JPanel {
     private String defaultProductCmd = "所有产品";
     private String defaultGroupCmd = "所有组";
     private String defaultMonthCmd = "所有月";
+    private String defaultBreach = "违约情况";
     private static String year;
 
     public OrderListPanel(String year) {
@@ -92,7 +95,7 @@ public class OrderListPanel extends JPanel {
             drawOrderListOptionCmb();
             drawOrderNumOptionCmb();
 
-            collectButton.setBounds(700, 20, 150, 50);
+            collectButton.setBounds(700, 0, 150, 50);
             collectButton.setFont(font);
             collectButton.addActionListener(e -> {
                 try {
@@ -149,6 +152,16 @@ public class OrderListPanel extends JPanel {
             // 给按钮加上监听
             deliveryMonthNumButton.addActionListener(e -> {
                 showDeliveryMonthNum(enums.Product.values());
+            });
+        }
+
+        {
+            //市场销售额占比
+            marketShareButton.setBounds(0, 260, 100, 80);
+            marketShareButton.setFont(font);
+            // 给按钮加上监听
+            marketShareButton.addActionListener(e -> {
+                showMarketShare();
             });
         }
 
@@ -211,7 +224,7 @@ public class OrderListPanel extends JPanel {
 
     private void drawOrderListOptionCmb() {
         //[市场，]
-        String[] filterCmd = new String[]{defaultMarketCmd, defaultProductCmd, defaultGroupCmd, defaultMonthCmd, null};
+        String[] filterCmd = new String[]{defaultMarketCmd, defaultProductCmd, defaultGroupCmd, defaultMonthCmd, null, defaultBreach};
         {
             //市场下拉框
             JComboBox cmb = new JComboBox();    //创建JComboBox
@@ -274,7 +287,7 @@ public class OrderListPanel extends JPanel {
             });
         }
         {
-            //订单匹配
+            //输入框订单号匹配
             JTextField orderNumberTf = new JTextField("输入订单号", 15);
             orderNumberTf.setBounds(40, 0, 100, 40);
             optionJp.add(orderNumberTf);
@@ -307,6 +320,20 @@ public class OrderListPanel extends JPanel {
                 }
             });
         }
+        {
+            //是否违约下拉框
+            JComboBox cmb = new JComboBox();    //创建JComboBox
+            cmb.addItem(defaultBreach);    //向下拉列表中添加一项
+            cmb.addItem("违约");
+            cmb.addItem("不违约");
+            cmb.setBounds(30, 0, 100, 10);
+            optionJp.add(cmb);
+            // 给按钮加上监听
+            cmb.addActionListener(e -> {
+                filterCmd[5] = Objects.requireNonNull(cmb.getSelectedItem()).toString();
+                filterOrderTable(filterCmd);
+            });
+        }
         optionJp.setFont(cmbFont);
 //        optionJp.setForeground(Color.red);//设置字体颜色
         optionJp.setBounds(100, 60, 600, 30);
@@ -335,6 +362,13 @@ public class OrderListPanel extends JPanel {
                     }
                     if (flag & StringUtils.isNotEmpty(filterCmd[4])) {
                         flag = StringUtils.containsIgnoreCase(objects[1].toString(), filterCmd[4]);
+                    }
+                    if (flag & !defaultBreach.equals(filterCmd[5])) {
+                        if ("违约".equals(filterCmd[5])) {
+                            flag = (boolean) objects[8];
+                        } else {
+                            flag = !(boolean) objects[8];
+                        }
                     }
                     return flag;
                 })
@@ -457,16 +491,23 @@ public class OrderListPanel extends JPanel {
             p.setGroupName(groupName);
             int totalPrice = NumberUtils.toInt(row[4] + "") * NumberUtils.toInt(row[5] + "");
             p.setMarketName(marketName);
-            p.setSales(p.getSales() + totalPrice);
+            if (!(boolean) row[8]) {//违约单不计入市场份额
+                p.setSales(p.getSales() + totalPrice);
+            }
             shareMap.put(key, p);
 
             ProfitDao p2 = shareSequenceData.getOrDefault(groupName, new ProfitDao());
-            p2.setSales(p2.getSales() + totalPrice);
+            if (!(boolean) row[8]) {//违约单不计入市场份额
+                p2.setSales(p2.getSales() + totalPrice);
+            }
             p2.setGroupName(groupName);
             shareSequenceData.put(groupName, p2);
 
             int marketPrice = marketData.getOrDefault(marketName, 0);
-            marketData.put(marketName, marketPrice + totalPrice);
+            if (!(boolean) row[8]) {//违约单不计入市场份额
+                marketPrice += totalPrice;
+            }
+            marketData.put(marketName, marketPrice);
         }
         String[] sequenceGroupName = shareSequenceData.values().stream()
                 .sorted((o1, o2) -> o2.getSales() - o1.getSales())
@@ -511,10 +552,12 @@ public class OrderListPanel extends JPanel {
         for (Object[] row : data) {
             ProfitDao p = profitDaos.getOrDefault(row[2], new ProfitDao());
             p.setGroupName(row[2] + "");
-            int num = NumberUtils.toInt(row[4] + "");
-            int price = NumberUtils.toInt(row[5] + "");
-            p.setSales(p.getSales() + num * price);
-            p.setProfit(p.getProfit() + (price - Constant.getCost(row[3] + "")) * num);
+            if (!(boolean) row[8]) {//违约单不计入市场份额
+                int num = NumberUtils.toInt(row[4] + "");
+                int price = NumberUtils.toInt(row[5] + "");
+                p.setSales(p.getSales() + num * price);
+                p.setProfit(p.getProfit() + (price - CacheManager.getConfig().getCost(row[3] + "")) * num);
+            }
             profitDaos.put(p.getGroupName(), p);
         }
         AtomicInteger i = new AtomicInteger();
@@ -573,6 +616,7 @@ public class OrderListPanel extends JPanel {
             data[j][5] = orderPo.getpPerFee();
             data[j][6] = String.format("%s月%s日", orderPo.getpDeliveryMonth(), orderPo.getpDeliveryDay());
             data[j][7] = orderPo.getpPaymentTerm();
+            data[j][8] = orderPo.isBreach();
         }
     }
 
@@ -590,19 +634,30 @@ public class OrderListPanel extends JPanel {
 
         JTable table = new TableModel(data, vName);
         if (vName.length == this.vName.length) {
-            DefaultTableModel newTableModel = new DefaultTableModel(data, vName) {
-                @Override
-                public boolean isCellEditable(int row, int column) {
-                    return column == 8;
-                }
-            };
+            DefineTableModel model = new DefineTableModel(data, vName);
+            table = new TableModel(model, editableVName);
 
-            table = new JTable(newTableModel);
-            String[] str2 = {"是", "否"};
-            table.getColumnModel().getColumn(8).setCellEditor(new DefaultCellEditor(new JComboBox(str2)));
-            table.setRowHeight(25);// 设置表格行高
-            table.setFont(new Font("Menu.font", Font.PLAIN, 15));
-            System.out.println("下拉框---------");
+//            处理违约复选框
+            JTable finalTable = table;
+            table.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {//仅当鼠标单击时响应
+                    //得到选中的行列的索引值
+                    int r = finalTable.getSelectedRow();
+                    int c = finalTable.getSelectedColumn();
+                    if (c == 8) {
+                        //得到选中的单元格的值，表格中都是字符串
+                        Object value = finalTable.getValueAt(r, c);
+//                        String info = r + "行" + c + "列值 : " + value.toString();
+                        List<OrderPo> orderPos = CacheManager.getOrder(year);
+                        for (OrderPo order : orderPos) {
+                            if (data[r][1].equals(order.getpOrderNum()) && data[r][2].equals(order.getOrderResult())) {
+                                order.setBreach((Boolean) value);
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
         }
 
 

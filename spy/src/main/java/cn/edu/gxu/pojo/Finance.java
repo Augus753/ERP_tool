@@ -20,6 +20,8 @@ public class Finance {
     private int depreciation;
     //厂房租金
     private int factoryRent;
+    //订单违约金，已经算在毛利里面
+    private int breach;
 
     public int getUpkeep() {
         return upkeep;
@@ -61,14 +63,22 @@ public class Finance {
         this.factoryRent = factoryRent;
     }
 
+    public int getBreach() {
+        return breach;
+    }
+
+    public void setBreach(int breach) {
+        this.breach = breach;
+    }
+
     public int sumRight() {
         //   （权益） 维修费+贷款利息+管理费+折旧费+厂房租金
-        return upkeep + interest + administration + depreciation + factoryRent;
+        return upkeep + interest + administration + depreciation + factoryRent + breach;
     }
 
     public int sumCash() {
         //    （现金）    维修费+贷款利息+管理费+厂房租金
-        return upkeep + interest + administration + factoryRent;
+        return upkeep + interest + administration + factoryRent + breach;
     }
 
     @Override

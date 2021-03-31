@@ -19,6 +19,7 @@ public class OrderPo {
     private int pDeliveryMonth;//交货月份
     private int pDeliveryDay;//交货日期
     private int pPaymentTerm;//账期
+    private boolean breach;//是否违约
 
     public String getsSysId() {
         return sSysId;
@@ -90,6 +91,14 @@ public class OrderPo {
 
     public void setpPaymentTerm(int pPaymentTerm) {
         this.pPaymentTerm = pPaymentTerm;
+    }
+
+    public boolean isBreach() {
+        return breach;
+    }
+
+    public void setBreach(boolean breach) {
+        this.breach = breach;
     }
 
     @Override

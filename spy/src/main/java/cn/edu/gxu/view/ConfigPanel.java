@@ -23,19 +23,24 @@ import java.util.stream.Stream;
 public class ConfigPanel extends JPanel {
 
     private static Object[] productName = {"P1成本", "P2成本", "P3成本", "P4成本", "P5成本"};
+    private static final boolean[] editable1 = new boolean[]{true, true, true, true, true};
     private Object[][] productData = new Object[1][productName.length];
 
     private static Object[] productLineName = {"费用名称", "手工线", "全自动", "柔线"};
+    private static final boolean[] editable2 = new boolean[]{false, true, true, true};
     private Object[][] productLineData = new Object[3][productLineName.length];
 
     private static Object[] otherName = {"管理费(年)", "贷款倍数", "厂房租金"};
+    private static final boolean[] editable3 = new boolean[]{true, true, true};
     private Object[][] otherData = new Object[1][otherName.length];
 
-    private static String[] groupName = {"参赛组名", "参赛组名"};
-    private String[][] groupData = new String[15][groupName.length];
-
     private static String[] loginName = {"名称", "值"};
+    private static final boolean[] editable4 = new boolean[]{false, true};
     private String[][] loginData = new String[3][groupName.length];
+
+    private static String[] groupName = {"参赛组名", "参赛组名"};
+    private static final boolean[] editable5 = new boolean[]{true, true};
+    private String[][] groupData = new String[15][groupName.length];
 
 
     Font font = new Font("黑体", Font.PLAIN, 15);
@@ -164,36 +169,32 @@ public class ConfigPanel extends JPanel {
     }
 
     private void showTable() {
-        TableModel productTable = new TableModel(productData, productName);
-        productTable.setEditable();
+        TableModel productTable = new TableModel(productData, productName, editable1);
+//        productTable.setEditable();
         productTable.setRowHeight(40);
         JScrollPane jp = new JScrollPane(productTable);
         jp.setBounds(20, 20, 500, 80);
         add(jp);
 
-        TableModel productLineTable = new TableModel(productLineData, productLineName);
-        productLineTable.setEditable();
+        TableModel productLineTable = new TableModel(productLineData, productLineName, editable2);
         productLineTable.setRowHeight(40);
         JScrollPane jp2 = new JScrollPane(productLineTable);
         jp2.setBounds(20, 120, 500, 160);
         add(jp2);
 
-        TableModel otherTable = new TableModel(otherData, otherName);
-        otherTable.setEditable();
+        TableModel otherTable = new TableModel(otherData, otherName, editable3);
         otherTable.setRowHeight(40);
         JScrollPane jp3 = new JScrollPane(otherTable);
         jp3.setBounds(20, 300, 500, 80);
         add(jp3);
 
-        TableModel loginTable = new TableModel(loginData, loginName);
-        loginTable.setEditable();
+        TableModel loginTable = new TableModel(loginData, loginName, editable4);
         loginTable.setRowHeight(25);
         JScrollPane jp5 = new JScrollPane(loginTable);
         jp5.setBounds(20, 400, 300, 120);
         add(jp5);
 
-        TableModel groupTable = new TableModel(groupData, groupName);
-        groupTable.setEditable();
+        TableModel groupTable = new TableModel(groupData, groupName, editable5);
         groupTable.setRowHeight(25);
         JScrollPane jp4 = new JScrollPane(groupTable);
         jp4.setBounds(550, 20, 200, 410);

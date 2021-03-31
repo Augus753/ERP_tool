@@ -17,6 +17,7 @@ public class ProfitDao {
     private int sales;
     private int profit;
 
+
     public String getGroupName() {
         return groupName;
     }

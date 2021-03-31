@@ -1,7 +1,9 @@
 package cn.edu.gxu.persist;
 
 import cn.edu.gxu.constant.Constant;
+import cn.edu.gxu.constant.enums;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author atom.hu
@@ -11,6 +13,8 @@ import com.alibaba.fastjson.JSONObject;
  * @Description
  */
 public class ErpConfig {
+    //    短贷利率
+    private float breachRate = (float) 0.2;
     //    短贷利率
     private float shortTemLoanRate = (float) 0.05;
     //    长利率
@@ -49,6 +53,14 @@ public class ErpConfig {
     private String userName;
     private String passWord;
     public String[] groupNames = Constant.GROUP_NAME;
+
+    public float getBreachRate() {
+        return breachRate;
+    }
+
+    public void setBreachRate(float breachRate) {
+        this.breachRate = breachRate;
+    }
 
     public float getShortTemLoanRate() {
         return shortTemLoanRate;
@@ -232,6 +244,23 @@ public class ErpConfig {
 
     public void setPassWord(String passWord) {
         this.passWord = passWord;
+    }
+
+    public int getCost(String productName) {
+        if (StringUtils.isBlank(productName)) return 0;
+        productName = productName.toUpperCase();
+        if (enums.Product.P1.product.equals(productName)) {
+            return P1Cost;
+        } else if (enums.Product.P2.product.equals(productName)) {
+            return P2Cost;
+        } else if (enums.Product.P3.product.equals(productName)) {
+            return P3Cost;
+        } else if (enums.Product.P4.product.equals(productName)) {
+            return P4Cost;
+        } else if (enums.Product.P5.product.equals(productName)) {
+            return P5Cost;
+        }
+        return 0;
     }
 
     @Override

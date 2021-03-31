@@ -22,7 +22,7 @@ import static cn.edu.gxu.constant.enums.ProdLine;
  */
 public class ForecastPanel extends JPanel {
 
-    private String[] vName = {"组名", "上一年权益", "上一年资金", "毛利", "可贷款额度", "财务支出", "最大滞留产品", "预计权益", "最大剩余资金"};
+    private String[] vName = {"  组名  ", "去年权益", "去年资金", "毛利", "可贷款额度", "财务支出", "最大滞留产品", "预计权益", "最大剩余资金"};
 
 //    private static String year;
 
@@ -90,6 +90,7 @@ public class ForecastPanel extends JPanel {
                     + spyPo.getProdLine().getQzd() * CacheManager.getConfig().qzdUpKeep
                     + spyPo.getProdLine().getSgx() * CacheManager.getConfig().sgxUpKeep);
             finance.setFactoryRent(CacheManager.getConfig().getFactoryRent() * spyPo.getFactory().rentNum);
+//            finance.setBreach();
             forecast.setFinance(finance);
             forecast.calForecastRights();
             forecast.calRemainMaxCash();
@@ -141,9 +142,9 @@ public class ForecastPanel extends JPanel {
 //        table.getTableHeader().setFont(new Font("Dialog", 0, 14));
 //        table.setFont(new Font("Menu.font", Font.PLAIN, 15));
 
-        for (int i = 1; i < table.getColumnCount(); i++) {
-            table.getColumnModel().getColumn(i).setPreferredWidth(130);
-        }
+//        for (int i = 1; i < table.getColumnCount(); i++) {
+//            table.getColumnModel().getColumn(i).setPreferredWidth(130);
+//        }
 
         JScrollPane jp = new JScrollPane(table);
         jp.setBounds(50, 10, 1000, 600);
