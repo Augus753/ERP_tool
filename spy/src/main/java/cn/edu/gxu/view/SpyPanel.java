@@ -47,11 +47,15 @@ public class SpyPanel extends JPanel {
         SpyPanel.mainFrame = mainFrame;
         SpyPanel.year = year;
 
-        this.setBounds(0, 0, 1200, 700);
+        this.setBounds(0, 0, 1100, 700);
         this.setLayout(null);
 
+        JLabel yearLabel = new JLabel(year);
+        yearLabel.setFont(new Font("黑体", Font.PLAIN, 26));
+        yearLabel.setBounds(30, 0, 100, 60);
+
         {//年末经营结果
-            scoreTf.setBounds(50, 0, 220, 80);
+            scoreTf.setBounds(150, 0, 220, 80);
             // 给文本框加上鼠标单击事件监听
             scoreTf.addMouseListener(new MouseAdapter() {
                 @Override
@@ -60,7 +64,7 @@ public class SpyPanel extends JPanel {
                     scoreTf.setText("");
                 }
             });
-            scoreButton.setBounds(80, 80, 150, 30);
+            scoreButton.setBounds(180, 80, 150, 30);
             scoreButton.setFont(font);
             // 给按钮加上监听
             scoreButton.addActionListener(e -> {
@@ -102,6 +106,7 @@ public class SpyPanel extends JPanel {
         });
         reloadData();
 
+        this.add(yearLabel);
         this.add(scoreTf);
         this.add(spyTf);
         this.add(scoreButton);

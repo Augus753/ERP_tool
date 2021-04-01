@@ -72,7 +72,7 @@ public class BrowserProxy {
 
         ChromeOptions options = new ChromeOptions();
         //无界面启动
-        options.addArguments("-headless");
+//        options.addArguments("-headless");
 
         // 禁用阻止弹出窗口
         options.addArguments("--disable-popup-blocking");

@@ -40,26 +40,23 @@ public class AdvertPanel extends JPanel {
             enums.Market.GLOBAL_MARKET_5.marketName};
 
     JTextField tf = new JTextField("请输入广告json报文");
-
     JButton button = new JButton("添加");
-
     JButton collectButton = new JButton("自动获取广告");
+    JButton finishButton = new JButton("结束获取");
 
     Font font = new Font("黑体", Font.PLAIN, 15);
     private static String year;
 
     public AdvertPanel(String year) {
         AdvertPanel.year = year;
-        this.setBounds(100, 0, 900, 700);
-
+        this.setBounds(50, 0, 1050, 700);
         this.setLayout(null);
 
-        button.setBounds(450, 10, 100, 40);
+        JLabel yearLabel = new JLabel(year);
+        yearLabel.setFont(new Font("黑体", Font.PLAIN, 26));
+        yearLabel.setBounds(30, 0, 100, 60);
 
-        button.setFont(font);
-
-        tf.setBounds(50, 0, 250, 60);
-
+        tf.setBounds(150, 0, 250, 60);
         // 给文本框加上鼠标单击事件监听
         tf.addMouseListener(new MouseAdapter() {
             @Override
@@ -69,13 +66,17 @@ public class AdvertPanel extends JPanel {
             }
         });
 
+        button.setBounds(530, 10, 100, 40);
+        button.setFont(font);
+
+
         cmb.addItem("--请选择--");    //向下拉列表中添加一项
         cmb.addItem(enums.Market.LOCAL_MARKET_1.marketName);
         cmb.addItem(enums.Market.REGIONAL_MARKET_2.marketName);
         cmb.addItem(enums.Market.DOMESTIC_MARKET_3.marketName);
         cmb.addItem(enums.Market.ASIA_MARKET_4.marketName);
         cmb.addItem(enums.Market.GLOBAL_MARKET_5.marketName);
-        cmb.setBounds(330, 10, 100, 40);
+        cmb.setBounds(410, 10, 100, 40);
 
         for (int i = 0; i < data.length; i++) {
             data[i][0] = i + 1;
@@ -88,8 +89,7 @@ public class AdvertPanel extends JPanel {
         });
 
 
-        collectButton.setBounds(600, 10, 150, 50);
-
+        collectButton.setBounds(670, 10, 120, 40);
         collectButton.setFont(font);
         collectButton.addActionListener(e -> {
             try {
@@ -98,29 +98,58 @@ public class AdvertPanel extends JPanel {
                 exception.printStackTrace();
                 JOptionPane.showMessageDialog(this, "自动获取广告信息失败", "自动获取数据失败",
                         JOptionPane.ERROR_MESSAGE);
+                return;
             }
+            JOptionPane.showMessageDialog(this, "获取中", "自动获取数据",
+                    JOptionPane.PLAIN_MESSAGE);
         });
 
+        finishButton.setBounds(800, 10, 100, 40);
+        finishButton.setFont(font);
+        finishButton.addActionListener(e -> {
+            try {
+                CacheManager.getInstance().getAutoCollectAd().interrupted();
+//                Thread.activeCount()
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                JOptionPane.showMessageDialog(this, "停止自动获取广告失败", "自动获取数据失败",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            JOptionPane.showMessageDialog(this, "停止自动获取广告成功", "自动获取数据成功",
+                    JOptionPane.PLAIN_MESSAGE);
+        });
+
+        this.add(yearLabel);
         this.add(cmb);
         this.add(tf);
         this.add(button);
         this.add(collectButton);
+        this.add(finishButton);
         this.setVisible(true);
+
+        CacheManager.getInstance().setAutoCollectAd(new Thread(() -> {
+            try {
+                JSONObject result = CollectManager.getInstance().getAdInfo();
+                for (enums.Market m : enums.Market.values()) {
+                    System.out.println("添加" + m.marketName);
+                    Object data = result.get(m.marketName + "市场");
+                    if (data != null) {
+                        showData((String) data, m.marketName, false);
+                    }
+                }
+                loadTable(data);
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("添加获取广告线程");
+        }));
     }
 
     private void collectAndShow() throws Exception {
         CollectManager.getInstance().login();
-        for (; ; ) {
-            JSONObject result = CollectManager.getInstance().getAdInfo();
-            for (enums.Market m : enums.Market.values()) {
-                Object data = result.get(m.marketName + "市场");
-                if (data != null) {
-                    showData((String) data, m.marketName, false);
-                }
-            }
-            loadTable(data);
-            Thread.sleep(1000);
-        }
+        CacheManager.getInstance().getAutoCollectAd().start();
     }
 
     private void showAllData() {
@@ -206,7 +235,7 @@ public class AdvertPanel extends JPanel {
         }
 
         JScrollPane jp = new JScrollPane(table);
-        jp.setBounds(0, 70, 800, 630);
+        jp.setBounds(50, 70, 850, 630);
         add(jp);
     }
 }

@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -274,11 +275,24 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
+        stopProcess();
+        CacheManager.reload();
         new MainFrame("ERP对手分析").init();
         System.out.println("页面布局完成");
-        CacheManager.reload();
         flushTimer();
         System.out.println("启动成功");
+    }
+
+    private static void stopProcess() {
+        //停止chrom.exe
+        try {
+            Runtime.getRuntime().exec("cmd.exe /c taskkill -f -im chrome.exe");
+            Runtime.getRuntime().exec("cmd.exe /c taskkill -f -im chromedriver.exe");
+            System.out.println("停止额外的chrome和驱动");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //停止chromedriver.exe
     }
 
 }

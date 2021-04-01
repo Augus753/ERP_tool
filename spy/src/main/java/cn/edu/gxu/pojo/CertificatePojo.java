@@ -140,7 +140,6 @@ public class CertificatePojo {
         String[] parts = text.split(",");
         for (String part : parts) {
             String[] a = part.split("_");
-            System.out.println(a[0] + "--------" + NumberUtils.toInt(a[1]));
 
             enums.CertificateStatus certificateStatus = enums.CertificateStatus.change(NumberUtils.toInt(a[1]));
             switch (a[0]) {

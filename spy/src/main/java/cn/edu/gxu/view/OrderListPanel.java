@@ -61,7 +61,7 @@ public class OrderListPanel extends JPanel {
 
 
     Font cmbFont = new Font("黑体", Font.BOLD, 14);
-    Font font = new Font("黑体", Font.PLAIN, 13);
+    Font font = new Font("黑体", Font.PLAIN, 14);
     private String defaultMarketCmd = "所有市场";
     private String defaultProductCmd = "所有产品";
     private String defaultGroupCmd = "所有组";
@@ -73,8 +73,14 @@ public class OrderListPanel extends JPanel {
         OrderListPanel.year = year;
 //        this.setBounds(0, 0, 1200, 700);
 
-        this.setBounds(0, 0, 900, 700);
+        this.setBounds(0, 0, 1100, 700);
         this.setLayout(null);
+
+
+        JLabel yearLabel = new JLabel(year);
+        yearLabel.setFont(new Font("黑体", Font.PLAIN, 26));
+        yearLabel.setBounds(30, 0, 100, 60);
+
         {//添加订单
             orderTf.setBounds(200, 0, 300, 50);
             // 给文本框加上鼠标单击事件监听
@@ -95,7 +101,7 @@ public class OrderListPanel extends JPanel {
             drawOrderListOptionCmb();
             drawOrderNumOptionCmb();
 
-            collectButton.setBounds(700, 0, 150, 50);
+            collectButton.setBounds(700, 0, 120, 50);
             collectButton.setFont(font);
             collectButton.addActionListener(e -> {
                 try {
@@ -167,6 +173,7 @@ public class OrderListPanel extends JPanel {
 
         reloadData();
 
+        this.add(yearLabel);
         this.add(orderTf);
         this.add(orderButton);
         this.add(collectButton);
@@ -662,7 +669,7 @@ public class OrderListPanel extends JPanel {
 
 
         JScrollPane jp = new JScrollPane(table);
-        jp.setBounds(100, 100, 800, 580);
+        jp.setBounds(100, 100, 1000, 580);
         if (faceTable != null) {
             this.remove(faceTable);
             if (vName == this.vName) {

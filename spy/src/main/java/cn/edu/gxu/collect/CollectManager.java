@@ -34,7 +34,8 @@ public class CollectManager {
     private WebDriver driver;
     private static final String FILTER_KEY_SCORE = "getGroups4";
     private static final String FILTER_KEY_AD = "getGroups3";
-
+    private static final String FILTER_KEY_ORDER = "getOrderResult";
+    private static final String FILTER_KEY_SPY = "getOtherBusInfo";
 
     private CollectManager() {
         BrowserProxy browserProxy = BrowserProxy.getInstance();
@@ -100,7 +101,10 @@ public class CollectManager {
             Set<String> bs = driver.getWindowHandles();
             //飞哥说这个是迭代器
             for (String he : bs) {
-                if (b1.equals(he)) continue;
+                if (b1.equals(he)) {
+                    driver.close();
+                    continue;
+                }
                 driver.switchTo().window(he);
                 System.out.println("当前页面title为：" + driver.getTitle());
             }
@@ -126,7 +130,7 @@ public class CollectManager {
         List<String> result = new ArrayList<>();
         for (WebElement group : groups) {
             group.click();
-            result.add(collectLog(FILTER_KEY_AD));
+            result.add(collectLog(FILTER_KEY_SPY));
         }
         return result;
     }
@@ -135,21 +139,27 @@ public class CollectManager {
         JSONObject result = new JSONObject();
         try {
             driver.findElement(By.xpath("//*[@id=\"app\"]/div/div/div[5]/a[8]")).click();
-            Thread.sleep(1000);
+//            Thread.sleep(1000);
 //        本地
             driver.findElement(By.xpath("//*[@id=\"app\"]/div/div/div[6]/div/div[2]/div/a[1]")).click();
             Thread.sleep(1000);
-            List<WebElement> element = driver.findElements(By.xpath("//*[@id=\"scrollViewone\"]"));
+            List<WebElement> element = driver.findElements(By.xpath("//*[@id=\"scrollViewone\"]/*"));
 
-            System.out.println("清理日志");
+            System.out.println("清理日志，" + element.size());
+//            随便切换一个市场
+            element.get(1).click();
             proxy.getHar().setLog(new HarLog());
 //通过for循环获得list中的所有元素，再调用getAttribute()方法得到元素的属性
             for (int i = 0; i < element.size(); i++) {
                 //市场名称
                 String key = element.get(i).getText();
                 element.get(i).click();
-                result.put(key, collectLog(FILTER_KEY_AD));
+                Thread.sleep(1000);
+                System.out.println("点击市场：" + key);
+                String aa = collectLog(FILTER_KEY_AD);
+                result.put(key, aa);
             }
+            System.out.println("广告市场：" + result.keySet());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -164,13 +174,18 @@ public class CollectManager {
 //        各年度经营结果
         System.out.println("清理日志");
         proxy.getHar().setLog(new HarLog());
-        for (int i = 0; i < Constant.RUN_YEAR.length - 2; i++) {
+        for (int i = 0; i < Constant.RUN_YEAR.length - 1; i++) {
             if (year.equals(Constant.RUN_YEAR[i])) {
                 Thread.sleep(1000);
-                WebElement element = driver.findElement(By.xpath("//*[@id=\"scrollViewGameResult\"]/a[" + (i + 1) + "]"));
+                System.out.println("获取年度经营结果：" + year);
+                try {
+                    driver.findElement(By.xpath("//*[@id=\"scrollViewGameResult\"]/a[" + (i + 1) + "]")).click();
+                } catch (Exception e) {
+                    System.out.println("非运行时间");
+                    WebElement element = driver.findElement(By.xpath("//*[@id=\"scrollViewGameResult\"]/a[" + (i + 1) + "]"));
 //                JavascriptExecutor executor = (JavascriptExecutor) driver;
-                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
-//                driver.findElement(By.xpath("//*[@id=\"scrollViewGameResult\"]/a[" + (i + 1) + "]")).click();
+                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+                }
                 return collectLog(FILTER_KEY_SCORE);
             }
         }
@@ -182,19 +197,20 @@ public class CollectManager {
             Thread.sleep(1000);
             Har har = proxy.getHar();
             List<HarEntry> list = har.getLog().getEntries();
-            for (HarEntry harEntry : list) {
+            for (int i = list.size() - 1; i >= 0; i--) {
+//            for (HarEntry harEntry : list) {
+                HarEntry harEntry = list.get(i);
                 // 请求的详细信息。
                 HarRequest harRequest = harEntry.getRequest();
                 // 请求地址
                 String reqUrl = harRequest.getUrl();
-                if (filterKey != null && !reqUrl.contains(filterKey)) continue;
                 System.out.println("reqUrl:" + reqUrl);
-//            harRequest.getMethod()
-                System.out.println(harEntry.getResponse().getStatusText() + "------------" + harEntry.getResponse().getContent().getSize());
+//                需要测试年末间谍，暂时不过滤。
+//                if (filterKey != null && !reqUrl.contains(filterKey)) continue;
                 HarResponse harResponse = harEntry.getResponse();
                 String responseBody = harResponse.getContent().getText();
                 System.out.println("responseBody:" + responseBody);
-                System.out.println("\n\n\n");
+//                System.out.println("\n\n");
                 return responseBody;
             }
             har.setLog(new HarLog());
@@ -212,8 +228,11 @@ public class CollectManager {
         Thread.sleep(1000);
 //        List<WebElement> element = driver.findElements(By.xpath("//*[@id=\"scrollViewone\"]"));
         System.out.println("清理日志");
-        driver.findElement(By.xpath("//*[@id=\"app\"]/div/div/div[6]/div[2]/div[1]/div/div[2]/div[3]/div[3]/button[2]")).click();
         proxy.getHar().setLog(new HarLog());
-        return collectLog(FILTER_KEY_SCORE);
+        WebElement element = driver.findElement(By.xpath("//*[@id=\"app\"]/div/div/div[6]/div[2]/div[1]/div/div[2]/div[3]/div[3]/button[2]"));
+//                JavascriptExecutor executor = (JavascriptExecutor) driver;
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+//        driver.findElement(By.xpath("//*[@id=\"app\"]/div/div/div[6]/div[2]/div[1]/div/div[2]/div[3]/div[3]/button[2]")).click();
+        return collectLog(FILTER_KEY_ORDER);
     }
 }

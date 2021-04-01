@@ -44,8 +44,13 @@ public class JsonParser extends Parser {
         spy.setCash(cash);
 //        spy.setLongtermLoan(0);
 //        spy.setShorttemLoan(0);
-        spy.setLongtermLoan((Integer) content.get("longtermLoan"));
-        spy.setShorttemLoan((Integer) content.get("shorttemLoan"));
+        try {
+            spy.setLongtermLoan((Integer) content.get("longtermLoan"));
+            spy.setShorttemLoan((Integer) content.get("shorttemLoan"));
+        } catch (Exception e) {
+            spy.setLongtermLoan(((BigDecimal) content.get("longtermLoan")).intValue());
+            spy.setShorttemLoan(((BigDecimal) content.get("shorttemLoan")).intValue());
+        }
         spy.formatFactory(content.getString("factory"));
         spy.formatProduct(content.getString("product"));
         spy.setCertificate(new CertificatePojo().format(content.getString("certificate")));

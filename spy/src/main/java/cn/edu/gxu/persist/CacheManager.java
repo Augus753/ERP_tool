@@ -22,7 +22,7 @@ public class CacheManager {
     private static final String DATA_PATH = "./data.json";
     private static final String DEFAULT_CHARSET = "utf-8";
     private static CacheManager instance = new CacheManager();
-
+    private Thread autoCollectAd;
 
     //    单例
     private static CacheMoodle cache = new CacheMoodle();
@@ -32,6 +32,14 @@ public class CacheManager {
 
     public static CacheManager getInstance() {
         return instance;
+    }
+
+    public Thread getAutoCollectAd() {
+        return autoCollectAd;
+    }
+
+    public void setAutoCollectAd(Thread autoCollectAd) {
+        this.autoCollectAd = autoCollectAd;
     }
 
     public void flush(CacheMoodle cache) {
