@@ -259,40 +259,28 @@ public class MainFrame extends JFrame implements ActionListener {
 
     /**
      * 自动保存
+     * 启动后开始，每5分钟保存一次
      */
     public static void flushTimer() {
         java.util.Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
-                System.out.println("-------延迟10分钟执行，每10分钟执行一次--------");
+                System.out.println("-------延迟5分钟执行，每5分钟执行一次--------");
                 try {
                     CacheManager.flush();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }, 1000 * 60 * 10, 1000 * 60 * 10);
+        }, 1000 * 60 * 5, 1000 * 60 * 5);
     }
 
     public static void main(String[] args) {
-        stopProcess();
         CacheManager.reload();
         new MainFrame("ERP对手分析").init();
         System.out.println("页面布局完成");
         flushTimer();
         System.out.println("启动成功");
-    }
-
-    private static void stopProcess() {
-        //停止chrom.exe
-        try {
-            Runtime.getRuntime().exec("cmd.exe /c taskkill -f -im chrome.exe");
-            Runtime.getRuntime().exec("cmd.exe /c taskkill -f -im chromedriver.exe");
-            System.out.println("停止额外的chrome和驱动");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //停止chromedriver.exe
     }
 
 }

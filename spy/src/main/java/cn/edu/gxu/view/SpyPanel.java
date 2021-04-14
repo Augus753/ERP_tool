@@ -34,7 +34,6 @@ public class SpyPanel extends JPanel {
     JTextField scoreTf = new JTextField("请输入年末排名json报文");
     JTextField spyTf = new JTextField("请输入间谍结果json报文");
 
-    JButton collectButton = new JButton("获取间谍数据");
     JButton scoreButton = new JButton("添加经营结果");
     JButton spyButton = new JButton("添加间牒结果");
 
@@ -91,19 +90,6 @@ public class SpyPanel extends JPanel {
                 showSpyData(s, true);
             });
         }
-        collectButton.setBounds(800, 20, 150, 50);
-        collectButton.setFont(font);
-        // 给按钮加上监听
-        collectButton.addActionListener(e -> {
-            try {
-                collectData();
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                exception.printStackTrace();
-                JOptionPane.showMessageDialog(this, "自动获取间谍信息失败", "自动获取数据失败",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        });
         reloadData();
 
         this.add(yearLabel);
@@ -111,21 +97,7 @@ public class SpyPanel extends JPanel {
         this.add(spyTf);
         this.add(scoreButton);
         this.add(spyButton);
-        this.add(collectButton);
         this.setVisible(true);
-    }
-
-    private void collectData() throws Exception {
-        CollectManager.getInstance().login();
-        String score = CollectManager.getInstance().getGroupScores(year);
-        showScoreData(score);
-        List<String> groupInfos = CollectManager.getInstance().getGroupInfo();
-        for (String groupInfo : groupInfos) {
-            System.out.println(groupInfo);
-            if (StringUtils.isNotEmpty(groupInfo))
-                showSpyData(groupInfo, false);
-        }
-        loadTable(data);
     }
 
     private void showScoreData(String text) {

@@ -57,9 +57,6 @@ public class OrderListPanel extends JPanel {
     JButton productNumButton = new JButton("产品数量");
     JButton deliveryMonthNumButton = new JButton("交货期数量");
 
-    JButton collectButton = new JButton("一键获取订单");
-
-
     Font cmbFont = new Font("黑体", Font.BOLD, 14);
     Font font = new Font("黑体", Font.PLAIN, 14);
     private String defaultMarketCmd = "所有市场";
@@ -101,17 +98,6 @@ public class OrderListPanel extends JPanel {
             drawOrderListOptionCmb();
             drawOrderNumOptionCmb();
 
-            collectButton.setBounds(700, 0, 120, 50);
-            collectButton.setFont(font);
-            collectButton.addActionListener(e -> {
-                try {
-                    collectAndShow();
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                    JOptionPane.showMessageDialog(this, "自动获取订单信息失败", "自动获取数据失败",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-            });
         }
         {
             //订单列表
@@ -176,20 +162,11 @@ public class OrderListPanel extends JPanel {
         this.add(yearLabel);
         this.add(orderTf);
         this.add(orderButton);
-        this.add(collectButton);
         this.add(orderListButton);
         this.add(profitButton);
         this.add(marketShareButton);
         this.add(productNumButton);
         this.setVisible(true);
-    }
-
-    private void collectAndShow() throws Exception {
-        CollectManager.getInstance().login();
-        String orderText = CollectManager.getInstance().getOrderInfo();
-        if (orderText != null && orderText.length() > 0) {
-            addOrder(orderText);
-        }
     }
 
     private void showDeliveryMonthNum(enums.Product[] values) {

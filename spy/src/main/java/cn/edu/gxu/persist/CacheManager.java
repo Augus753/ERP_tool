@@ -71,7 +71,7 @@ public class CacheManager {
         try {
             String text = FileUtils.readFileToString(new File(DATA_PATH), DEFAULT_CHARSET);
             cache = JSONObject.parseObject(text, CacheMoodle.class);
-            System.out.println("读取到：" + cache);
+//            System.out.println("读取到：" + cache);
         } catch (IOException e) {
             System.err.println("未读取到数据文件");
         }
@@ -80,7 +80,7 @@ public class CacheManager {
     public static synchronized void reload(File file) throws Exception {
         String text = FileUtils.readFileToString(file, DEFAULT_CHARSET);
         cache = JSONObject.parseObject(text, CacheMoodle.class);
-        System.out.println("读取到：" + cache);
+//        System.out.println("读取到：" + cache);
     }
 
     public static SpyPo getSpy(String groupName) {

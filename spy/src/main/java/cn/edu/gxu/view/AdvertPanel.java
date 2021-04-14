@@ -41,8 +41,6 @@ public class AdvertPanel extends JPanel {
 
     JTextField tf = new JTextField("请输入广告json报文");
     JButton button = new JButton("添加");
-    JButton collectButton = new JButton("自动获取广告");
-    JButton finishButton = new JButton("结束获取");
 
     Font font = new Font("黑体", Font.PLAIN, 15);
     private static String year;
@@ -88,69 +86,14 @@ public class AdvertPanel extends JPanel {
             showData(s);
         });
 
-
-        collectButton.setBounds(670, 10, 120, 40);
-        collectButton.setFont(font);
-        collectButton.addActionListener(e -> {
-            try {
-                collectAndShow();
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                JOptionPane.showMessageDialog(this, "自动获取广告信息失败", "自动获取数据失败",
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            JOptionPane.showMessageDialog(this, "获取中", "自动获取数据",
-                    JOptionPane.PLAIN_MESSAGE);
-        });
-
-        finishButton.setBounds(800, 10, 100, 40);
-        finishButton.setFont(font);
-        finishButton.addActionListener(e -> {
-            try {
-                CacheManager.getInstance().getAutoCollectAd().interrupted();
-//                Thread.activeCount()
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                JOptionPane.showMessageDialog(this, "停止自动获取广告失败", "自动获取数据失败",
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            JOptionPane.showMessageDialog(this, "停止自动获取广告成功", "自动获取数据成功",
-                    JOptionPane.PLAIN_MESSAGE);
-        });
-
         this.add(yearLabel);
         this.add(cmb);
         this.add(tf);
         this.add(button);
-        this.add(collectButton);
-        this.add(finishButton);
         this.setVisible(true);
 
-        CacheManager.getInstance().setAutoCollectAd(new Thread(() -> {
-            try {
-                JSONObject result = CollectManager.getInstance().getAdInfo();
-                for (enums.Market m : enums.Market.values()) {
-                    System.out.println("添加" + m.marketName);
-                    Object data = result.get(m.marketName + "市场");
-                    if (data != null) {
-                        showData((String) data, m.marketName, false);
-                    }
-                }
-                loadTable(data);
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("添加获取广告线程");
-        }));
     }
 
-    private void collectAndShow() throws Exception {
-        CollectManager.getInstance().login();
-        CacheManager.getInstance().getAutoCollectAd().start();
-    }
 
     private void showAllData() {
         for (enums.Market market : enums.Market.values())
