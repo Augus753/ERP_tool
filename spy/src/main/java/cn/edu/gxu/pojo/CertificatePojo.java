@@ -190,12 +190,27 @@ public class CertificatePojo {
             result += "国内,";
         }
         if (enums.CertificateStatus.COMPLETE_1.status.equals(asiaMarket.status)) {
-            result += "亚,";
+            result += "亚洲,";
         }
         if (enums.CertificateStatus.COMPLETE_1.status.equals(globalMarket.status)) {
             result += "国际";
         }
         return result;
+    }
+
+    public String showDevelopMarket() {
+        String result = "";
+        if (enums.CertificateStatus.RESEARCH_2.status.equals(domesticMarket.status)) {
+            result += "国内,";
+        }
+        if (enums.CertificateStatus.RESEARCH_2.status.equals(asiaMarket.status)) {
+            result += "亚洲,";
+        }
+        if (enums.CertificateStatus.RESEARCH_2.status.equals(globalMarket.status)) {
+            result += "国际";
+        }
+        if (result.length() == 0) return result;
+        return String.format("      开发中（%s）", result);
     }
 
     public String showProduct() {

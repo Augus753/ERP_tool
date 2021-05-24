@@ -46,7 +46,7 @@ public class SpyPanel extends JPanel {
         SpyPanel.mainFrame = mainFrame;
         SpyPanel.year = year;
 
-        this.setBounds(0, 0, 1100, 700);
+        this.setBounds(50, 0, 1100, 700);
         this.setLayout(null);
 
         JLabel yearLabel = new JLabel(year);

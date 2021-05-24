@@ -70,7 +70,7 @@ public class OrderListPanel extends JPanel {
         OrderListPanel.year = year;
 //        this.setBounds(0, 0, 1200, 700);
 
-        this.setBounds(0, 0, 1100, 700);
+        this.setBounds(50, 0, 1100, 700);
         this.setLayout(null);
 
 
